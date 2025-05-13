@@ -18,7 +18,7 @@ package MyStringTokeniser with SPARK_Mode is
    -- Count does not exceed the number of elements inside the Token
    -- Ensures that the outside program does not get an 'index out of range error' when
    -- trying to access the Tokens array using Count.
-     Post => Count <= Tokens'Length
+     Post => Count <= Tokens'Length and
    -- For every token stored inside Tokens array, if the token is non-empty, it should
    -- locate entirely within the boundary of string S.
    -- This ensures that very token inside Tokens array is a valid token generated from S,
@@ -26,6 +26,6 @@ package MyStringTokeniser with SPARK_Mode is
      (for all Index in Tokens'First..Tokens'First+(Count-1) =>
           (Tokens(Index).Start >= S'First and
           Tokens(Index).Length > 0) and then
-            Tokens(Index).Length-1 <= S'Last - Tokens(Index).Start)
+            Tokens(Index).Length-1 <= S'Last - Tokens(Index).Start);
 
 end MyStringTokeniser;
