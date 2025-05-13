@@ -1,0 +1,25 @@
+[GENERATED OBJECT FILE]
+b__main.o
+[PROJECT FILES]
+C:\unimelb\2025 sem 1\hise\assignment3\assignment3\default.gpr
+20250512105636 8f951341f9bd693aae416df7dcf353a8
+[BOUND OBJECT FILES]
+C:\unimelb\2025 sem 1\hise\assignment3\assignment3\obj\memorystore.o
+C:\unimelb\2025 sem 1\hise\assignment3\assignment3\obj\mycommandline.o
+C:\unimelb\2025 sem 1\hise\assignment3\assignment3\obj\mystring.o
+C:\unimelb\2025 sem 1\hise\assignment3\assignment3\obj\mystringtokeniser.o
+C:\unimelb\2025 sem 1\hise\assignment3\assignment3\obj\pin.o
+C:\unimelb\2025 sem 1\hise\assignment3\assignment3\obj\stringtointeger.o
+C:\unimelb\2025 sem 1\hise\assignment3\assignment3\obj\main.o
+[GENERATED SOURCE FILES]
+b__main.ads
+b__main.adb
+b__main.ali
+[RESULTING OPTIONS]
+-LC:\unimelb\2025 sem 1\hise\assignment3\assignment3\obj\
+-LC:\unimelb\2025 sem 1\hise\assignment3\assignment3\obj\
+-LC:/gnat/2021/lib/gcc/x86_64-w64-mingw32/10.3.1/adalib/
+-static
+-static-libgcc
+C:/gnat/2021/lib/gcc/x86_64-w64-mingw32/10.3.1/adalib/libgnat.a
+-Wl,--stack=0x2000000
