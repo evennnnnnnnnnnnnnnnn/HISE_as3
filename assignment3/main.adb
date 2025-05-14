@@ -6,7 +6,7 @@ with MyStringTokeniser;
 with StringToInteger;
 with PIN;
 with MemoryStore;
-
+with Calculator;
 with Ada.Text_IO;use Ada.Text_IO;
 with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
 with Ada.Long_Long_Integer_Text_IO;
@@ -27,6 +27,11 @@ begin
    ------------------------------------------------------------------
    --  Command-line echo
    ------------------------------------------------------------------
+   Put_Line("==> Entering Calculator.Run");
+   Calculator.Run;
+   Put_Line("==> Exiting Calculator.Run");
+   
+   
    Put(MyCommandLine.Command_Name); Put_Line(" is running!");
    Put("I was invoked with "); Put(MyCommandLine.Argument_Count,0); Put_Line(" arguments.");
    for Arg in 1..MyCommandLine.Argument_Count loop
