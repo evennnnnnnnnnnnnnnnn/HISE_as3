@@ -4,7 +4,8 @@ with MyStringTokeniser;       use MyStringTokeniser;
 with StringToInteger;         use StringToInteger;
 with PIN;
 with Ada.Strings.Unbounded;   use Ada.Strings.Unbounded;
-
+with MemoryStore;
+with Interfaces;
 package body Calculator is
 
    --------------------------------------------------------------------------
@@ -14,7 +15,7 @@ package body Calculator is
    type Stack_Type is array(1 .. Max_Stack) of Integer;
    Stack      : Stack_Type := (others => 0);
    Top        : Natural    := 0;
-
+   Mem : MemoryStore.Database;
    --------------------------------------------------------------------------
    --  Process_Command
    --------------------------------------------------------------------------
@@ -118,11 +119,123 @@ package body Calculator is
          else
             Put_Line("Error: stack underflow");
          end if;
+      elsif Cmd(1 .. 1) = "+" and then Num_Tokens = 1 then
+         if not State then
+            Put_Line("Error: calculator locked");
+         elsif Top >= 2 then
+            declare
+               Op1 : constant Integer := Stack(Top - 1);
+               Op2 : constant Integer := Stack(Top);
+               Result : Integer;
+            begin
+               -- Check for potential overflow
+               if (Op1 > 0 and then Op2 > 0 and then Op1 > Integer'Last - Op2) or
+                 (Op1 < 0 and then Op2 < 0 and then Op1 < Integer'First - Op2) then
+                  Put_Line("Error: addition would cause overflow");
+               else
+                  Result := Op1 + Op2;
+                  Top := Top - 2;
+                  Top := Top + 1;
+                  Stack(Top) := Result;
+               end if;
+            end;
+         else
+            Put_Line("Error: insufficient operands");
+         end if;
+
+         -- - (Subtraction)
+      elsif Cmd(1 .. 1) = "-" and then Num_Tokens = 1 then
+         if not State then
+            Put_Line("Error: calculator locked");
+         elsif Top >= 2 then
+            declare
+               Op1 : constant Integer := Stack(Top - 1);
+               Op2 : constant Integer := Stack(Top);
+               Result : Integer;
+            begin
+               -- Check for potential overflow
+               if (Op1 > 0 and then Op2 < 0 and then Op1 > Integer'Last + Op2) or
+                 (Op1 < 0 and then Op2 > 0 and then Op1 < Integer'First + Op2) then
+                  Put_Line("Error: subtraction would cause overflow");
+               else
+                  Result := Op1 - Op2;
+                  Top := Top - 2;
+                  Top := Top + 1;
+                  Stack(Top) := Result;
+               end if;
+            end;
+         else
+            Put_Line("Error: insufficient operands");
+         end if;
+
+
+
+            -- storeTo <loc>
+      elsif Cmd(1 .. 7) = "storeTo" and then Num_Tokens = 2 then
+         if not State then
+            Put_Line("Error: calculator locked");
+         elsif Top > 0 then
+            declare
+               Loc_Int : Integer := From_String(To_String(Arg1));
+            begin
+               if Loc_Int in MemoryStore.Location_Index'Range then
+                  MemoryStore.Put(Mem,
+                    MemoryStore.Location_Index(Loc_Int),
+                    Interfaces.Integer_32(Stack(Top)));
+                  Top := Top - 1;
+               end if;
+            end;
+         else
+            Put_Line("Error: insufficient operands");
+         end if;
+
+      -- loadFrom <loc>
+      elsif Cmd(1 .. 8) = "loadFrom" and then Num_Tokens = 2 then
+         if not State then
+            Put_Line("Error: calculator locked");
+         else
+            declare
+               Loc_Int : Integer := From_String(To_String(Arg1));
+            begin
+               if Loc_Int in MemoryStore.Location_Index'Range and then
+                  MemoryStore.Has(Mem, MemoryStore.Location_Index(Loc_Int))
+               then
+                  Top := Top + 1;
+                  Stack(Top) :=
+                    Integer(MemoryStore.Get(Mem,
+                      MemoryStore.Location_Index(Loc_Int)));
+               end if;
+            end;
+         end if;
+
+      -- remove <loc>
+      elsif Cmd(1 .. 6) = "remove" and then Num_Tokens = 2 then
+         if not State then
+            Put_Line("Error: calculator locked");
+         else
+            declare
+               Loc_Int : Integer := From_String(To_String(Arg1));
+            begin
+               if Loc_Int in MemoryStore.Location_Index'Range then
+                  MemoryStore.Remove(Mem,
+                    MemoryStore.Location_Index(Loc_Int));
+               end if;
+            end;
+         end if;
+
+      -- list
+      elsif Cmd(1 .. 4) = "list" and then Num_Tokens = 1 then
+         if not State then
+            Put_Line("Error: calculator locked");
+         else
+            MemoryStore.Print(Mem);
+         end if;
 
       -- Unknown command
       else
          Put_Line("Error: unknown command");
       end if;
+
    end Process_Command;
 
    --------------------------------------------------------------------------
@@ -135,6 +248,7 @@ package body Calculator is
       Line_Buf : String(1 .. 2048);
       Len      : Natural;
    begin
+      MemoryStore.Init(Mem);
       loop
          -- Prompt
          if State then
