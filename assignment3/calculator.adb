@@ -119,6 +119,8 @@ package body Calculator is
          else
             Put_Line("Error: stack underflow");
          end if;
+
+      -- - (Add)
       elsif Cmd(1 .. 1) = "+" and then Num_Tokens = 1 then
          if not State then
             Put_Line("Error: calculator locked");
@@ -168,7 +170,59 @@ package body Calculator is
             Put_Line("Error: insufficient operands");
          end if;
 
+      -- * (Multiplication)
+      elsif Cmd(1 .. 1) = "*" and then Num_Tokens = 1 then
+         if not State then
+            Put_Line("Error: calculator locked");
+         elsif Top >= 2 then
+            declare
+               Op1    : constant Integer := Stack(Top - 1);
+               Op2    : constant Integer := Stack(Top);
+               Result : Integer;
+            begin
 
+               if (Op1 > 0 and then Op2 > 0 and then Op1 > Integer'Last / Op2)
+                 or else
+                  (Op1 < 0 and then Op2 < 0 and then Op1 < Integer'First / Op2)
+               then
+                  Put_Line("Error: multiplication would cause overflow");
+               else
+                  Result := Op1 * Op2;
+                  Top := Top - 2;
+                  Top := Top + 1;
+                  Stack(Top) := Result;
+               end if;
+            end;
+         else
+            Put_Line("Error: insufficient operands");
+         end if;
+
+      -- / (Division)
+      elsif Cmd(1 .. 1) = "/" and then Num_Tokens = 1 then
+         if not State then
+            Put_Line("Error: calculator locked");
+         elsif Top >= 2 then
+            declare
+               Op1 : constant Integer := Stack(Top - 1);
+               Op2 : constant Integer := Stack(Top);
+            begin
+               if Op2 = 0 then
+                  Put_Line("Error: division by zero");
+               elsif Op1 = Integer'First and then Op2 = -1 then
+                  Put_Line("Error: division would cause overflow");
+               else
+                  declare
+                     Result : constant Integer := Op1 / Op2;
+                  begin
+                     Top := Top - 2;
+                     Top := Top + 1;
+                     Stack(Top) := Result;
+                  end;
+               end if;
+            end;
+         else
+            Put_Line("Error: insufficient operands");
+         end if;
 
             -- storeTo <loc>
       elsif Cmd(1 .. 7) = "storeTo" and then Num_Tokens = 2 then
