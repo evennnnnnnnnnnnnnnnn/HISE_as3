@@ -1,70 +1,172 @@
 <?xml version="1.0"?>
-<Locations>
+<Locations >
   <Project>
-    <vfs_file>C:\unimelb\2025 sem 1\hise\assignment3\assignment3\default.gpr</vfs_file>
+    <vfs_file />
     <file_marker column=" 1" line=" 1" >
-      <vfs_project>C:\unimelb\2025 sem 1\hise\assignment3\assignment3\default.gpr</vfs_project>
-      <vfs_file>C:\unimelb\2025 sem 1\hise\assignment3\assignment3\main.adb</vfs_file>
+      <vfs_project>C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\default.gpr</vfs_project>
+      <vfs_file>C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\mycommandline.adb</vfs_file>
     </file_marker>
     <file_marker column=" 1" line=" 1" >
-      <vfs_project>C:\unimelb\2025 sem 1\hise\assignment3\assignment3\default.gpr</vfs_project>
-      <vfs_file>C:\unimelb\2025 sem 1\hise\assignment3\assignment3\mystringtokeniser.adb</vfs_file>
+      <vfs_project>C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\default.gpr</vfs_project>
+      <vfs_file>C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\calculator.adb</vfs_file>
     </file_marker>
-    <file_marker column=" 60" line=" 37" >
-      <vfs_project>C:\unimelb\2025 sem 1\hise\assignment3\assignment3\default.gpr</vfs_project>
-      <vfs_file>C:\unimelb\2025 sem 1\hise\assignment3\assignment3\mystringtokeniser.adb</vfs_file>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\default.gpr</vfs_project>
+      <vfs_file>C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\memorystore.ads</vfs_file>
     </file_marker>
-    <file_marker column=" 7" line=" 9" >
-      <vfs_project />
-      <vfs_file>C:\unimelb\2025 sem 1\hise\assignment3\assignment3\mystringtokeniser.adb</vfs_file>
+    <file_marker column=" 1" line=" 36" >
+      <vfs_project>C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\default.gpr</vfs_project>
+      <vfs_file>C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\calculator.adb</vfs_file>
     </file_marker>
-    <file_marker column=" 61" line=" 17" >
-      <vfs_project />
-      <vfs_file>C:\unimelb\2025 sem 1\hise\assignment3\assignment3\mystringtokeniser.adb</vfs_file>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\default.gpr</vfs_project>
+      <vfs_file>C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\main.adb</vfs_file>
     </file_marker>
-    <file_marker column=" 59" line=" 24" >
-      <vfs_project />
-      <vfs_file>C:\unimelb\2025 sem 1\hise\assignment3\assignment3\mystringtokeniser.adb</vfs_file>
+    <file_marker column=" 14" line=" 31" >
+      <vfs_project>C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\default.gpr</vfs_project>
+      <vfs_file>C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\main.adb</vfs_file>
     </file_marker>
-    <file_marker column=" 13" line=" 43" >
-      <vfs_project />
-      <vfs_file>C:\unimelb\2025 sem 1\hise\assignment3\assignment3\mystringtokeniser.adb</vfs_file>
+    <file_marker column=" 1" line=" 36" >
+      <vfs_project>C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\default.gpr</vfs_project>
+      <vfs_file>C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\calculator.adb</vfs_file>
     </file_marker>
-    <file_marker column=" 1" line=" 48" >
-      <vfs_project />
-      <vfs_file>C:\unimelb\2025 sem 1\hise\assignment3\assignment3\mystringtokeniser.adb</vfs_file>
+    <file_marker column=" 14" line=" 31" >
+      <vfs_project>C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\default.gpr</vfs_project>
+      <vfs_file>C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\main.adb</vfs_file>
     </file_marker>
-    <file_marker column=" 1" line=" 55" >
-      <vfs_project />
-      <vfs_file>C:\unimelb\2025 sem 1\hise\assignment3\assignment3\mystringtokeniser.adb</vfs_file>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\default.gpr</vfs_project>
+      <vfs_file>C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\main.adb</vfs_file>
     </file_marker>
-    <file_marker column=" 16" line=" 61" >
-      <vfs_project />
-      <vfs_file>C:\unimelb\2025 sem 1\hise\assignment3\assignment3\mystringtokeniser.adb</vfs_file>
+    <file_marker column=" 14" line=" 31" >
+      <vfs_project>C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\default.gpr</vfs_project>
+      <vfs_file>C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\main.adb</vfs_file>
     </file_marker>
-    <file_marker column=" 1" line=" 88" >
-      <vfs_project>C:\unimelb\2025 sem 1\hise\assignment3\assignment3\default.gpr</vfs_project>
-      <vfs_file>C:\unimelb\2025 sem 1\hise\assignment3\assignment3\main.adb</vfs_file>
-    </file_marker>
-    <file_marker column=" 1" line=" 79" >
-      <vfs_project>C:\unimelb\2025 sem 1\hise\assignment3\assignment3\default.gpr</vfs_project>
-      <vfs_file>C:\unimelb\2025 sem 1\hise\assignment3\assignment3\main.adb</vfs_file>
-    </file_marker>
-    <file_marker column=" 45" line=" 46" >
-      <vfs_project>C:\unimelb\2025 sem 1\hise\assignment3\assignment3\default.gpr</vfs_project>
-      <vfs_file>C:\unimelb\2025 sem 1\hise\assignment3\assignment3\mystringtokeniser.adb</vfs_file>
-    </file_marker>
-    <file_marker column=" 34" line=" 47" >
-      <vfs_project>C:\unimelb\2025 sem 1\hise\assignment3\assignment3\default.gpr</vfs_project>
-      <vfs_file>C:\unimelb\2025 sem 1\hise\assignment3\assignment3\mystringtokeniser.adb</vfs_file>
-    </file_marker>
-    <file_marker column=" 41" line=" 50" >
-      <vfs_project>C:\unimelb\2025 sem 1\hise\assignment3\assignment3\default.gpr</vfs_project>
-      <vfs_file>C:\unimelb\2025 sem 1\hise\assignment3\assignment3\mystringtokeniser.adb</vfs_file>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\default.gpr</vfs_project>
+      <vfs_file>C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\pin.adb</vfs_file>
     </file_marker>
     <file_marker current="true" column=" 1" line=" 1" >
-      <vfs_project>C:\unimelb\2025 sem 1\hise\assignment3\assignment3\default.gpr</vfs_project>
-      <vfs_file>C:\unimelb\2025 sem 1\hise\assignment3\assignment3\mystringtokeniser.ads</vfs_file>
+      <vfs_project>C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\default.gpr</vfs_project>
+      <vfs_file>C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\pin.ads</vfs_file>
+    </file_marker>
+  </Project>
+  <Project >
+    <vfs_file >C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\default.gpr</vfs_file>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\default.gpr</vfs_project>
+      <vfs_file >C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\mycommandline.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\default.gpr</vfs_project>
+      <vfs_file >C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\calculator.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\default.gpr</vfs_project>
+      <vfs_file >C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\memorystore.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 36">
+      <vfs_project >C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\default.gpr</vfs_project>
+      <vfs_file >C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\calculator.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\default.gpr</vfs_project>
+      <vfs_file >C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\main.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 14" line=" 31">
+      <vfs_project >C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\default.gpr</vfs_project>
+      <vfs_file >C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\main.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 36">
+      <vfs_project >C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\default.gpr</vfs_project>
+      <vfs_file >C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\calculator.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 14" line=" 31">
+      <vfs_project >C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\default.gpr</vfs_project>
+      <vfs_file >C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\main.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\default.gpr</vfs_project>
+      <vfs_file >C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\main.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 14" line=" 31">
+      <vfs_project >C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\default.gpr</vfs_project>
+      <vfs_file >C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\main.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\default.gpr</vfs_project>
+      <vfs_file >C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\pin.adb</vfs_file>
+    </file_marker>
+    <file_marker current="true" column=" 1" line=" 1">
+      <vfs_project >C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\default.gpr</vfs_project>
+      <vfs_file >C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\pin.ads</vfs_file>
+    </file_marker>
+  </Project>
+  <Project >
+    <vfs_file >C:\unimelb\2025 sem 1\hise\assignment3\assignment3\default.gpr</vfs_file>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >C:\unimelb\2025 sem 1\hise\assignment3\assignment3\default.gpr</vfs_project>
+      <vfs_file >C:\unimelb\2025 sem 1\hise\assignment3\assignment3\main.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >C:\unimelb\2025 sem 1\hise\assignment3\assignment3\default.gpr</vfs_project>
+      <vfs_file >C:\unimelb\2025 sem 1\hise\assignment3\assignment3\mystringtokeniser.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 60" line=" 37">
+      <vfs_project >C:\unimelb\2025 sem 1\hise\assignment3\assignment3\default.gpr</vfs_project>
+      <vfs_file >C:\unimelb\2025 sem 1\hise\assignment3\assignment3\mystringtokeniser.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 7" line=" 9">
+      <vfs_project  />
+      <vfs_file >C:\unimelb\2025 sem 1\hise\assignment3\assignment3\mystringtokeniser.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 61" line=" 17">
+      <vfs_project  />
+      <vfs_file >C:\unimelb\2025 sem 1\hise\assignment3\assignment3\mystringtokeniser.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 59" line=" 24">
+      <vfs_project  />
+      <vfs_file >C:\unimelb\2025 sem 1\hise\assignment3\assignment3\mystringtokeniser.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 13" line=" 43">
+      <vfs_project  />
+      <vfs_file >C:\unimelb\2025 sem 1\hise\assignment3\assignment3\mystringtokeniser.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 48">
+      <vfs_project  />
+      <vfs_file >C:\unimelb\2025 sem 1\hise\assignment3\assignment3\mystringtokeniser.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 55">
+      <vfs_project  />
+      <vfs_file >C:\unimelb\2025 sem 1\hise\assignment3\assignment3\mystringtokeniser.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 16" line=" 61">
+      <vfs_project  />
+      <vfs_file >C:\unimelb\2025 sem 1\hise\assignment3\assignment3\mystringtokeniser.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 88">
+      <vfs_project >C:\unimelb\2025 sem 1\hise\assignment3\assignment3\default.gpr</vfs_project>
+      <vfs_file >C:\unimelb\2025 sem 1\hise\assignment3\assignment3\main.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 79">
+      <vfs_project >C:\unimelb\2025 sem 1\hise\assignment3\assignment3\default.gpr</vfs_project>
+      <vfs_file >C:\unimelb\2025 sem 1\hise\assignment3\assignment3\main.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 45" line=" 46">
+      <vfs_project >C:\unimelb\2025 sem 1\hise\assignment3\assignment3\default.gpr</vfs_project>
+      <vfs_file >C:\unimelb\2025 sem 1\hise\assignment3\assignment3\mystringtokeniser.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 34" line=" 47">
+      <vfs_project >C:\unimelb\2025 sem 1\hise\assignment3\assignment3\default.gpr</vfs_project>
+      <vfs_file >C:\unimelb\2025 sem 1\hise\assignment3\assignment3\mystringtokeniser.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 41" line=" 50">
+      <vfs_project >C:\unimelb\2025 sem 1\hise\assignment3\assignment3\default.gpr</vfs_project>
+      <vfs_file >C:\unimelb\2025 sem 1\hise\assignment3\assignment3\mystringtokeniser.adb</vfs_file>
+    </file_marker>
+    <file_marker current="true" column=" 1" line=" 1">
+      <vfs_project >C:\unimelb\2025 sem 1\hise\assignment3\assignment3\default.gpr</vfs_project>
+      <vfs_file >C:\unimelb\2025 sem 1\hise\assignment3\assignment3\mystringtokeniser.ads</vfs_file>
     </file_marker>
   </Project>
 </Locations>

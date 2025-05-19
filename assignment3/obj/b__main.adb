@@ -30,13 +30,15 @@ package body ada_main is
    E121 : Short_Integer; pragma Import (Ada, E121, "system__finalization_root_E");
    E119 : Short_Integer; pragma Import (Ada, E119, "ada__finalization_E");
    E118 : Short_Integer; pragma Import (Ada, E118, "system__file_io_E");
+   E142 : Short_Integer; pragma Import (Ada, E142, "ada__strings__unbounded_E");
    E094 : Short_Integer; pragma Import (Ada, E094, "ada__text_io_E");
-   E140 : Short_Integer; pragma Import (Ada, E140, "memorystore_E");
-   E142 : Short_Integer; pragma Import (Ada, E142, "mycommandline_E");
-   E146 : Short_Integer; pragma Import (Ada, E146, "mystring_E");
-   E148 : Short_Integer; pragma Import (Ada, E148, "mystringtokeniser_E");
-   E150 : Short_Integer; pragma Import (Ada, E150, "pin_E");
-   E153 : Short_Integer; pragma Import (Ada, E153, "stringtointeger_E");
+   E159 : Short_Integer; pragma Import (Ada, E159, "memorystore_E");
+   E161 : Short_Integer; pragma Import (Ada, E161, "mycommandline_E");
+   E172 : Short_Integer; pragma Import (Ada, E172, "mystring_E");
+   E165 : Short_Integer; pragma Import (Ada, E165, "mystringtokeniser_E");
+   E167 : Short_Integer; pragma Import (Ada, E167, "pin_E");
+   E170 : Short_Integer; pragma Import (Ada, E170, "stringtointeger_E");
+   E140 : Short_Integer; pragma Import (Ada, E140, "calculator_E");
 
    Sec_Default_Sized_Stacks : array (1 .. 1) of aliased System.Secondary_Stack.SS_Stack (System.Parameters.Runtime_Default_Sec_Stack_Size);
 
@@ -54,12 +56,19 @@ package body ada_main is
       begin
          F1;
       end;
+      E142 := E142 - 1;
       declare
          procedure F2;
-         pragma Import (Ada, F2, "system__file_io__finalize_body");
+         pragma Import (Ada, F2, "ada__strings__unbounded__finalize_spec");
+      begin
+         F2;
+      end;
+      declare
+         procedure F3;
+         pragma Import (Ada, F3, "system__file_io__finalize_body");
       begin
          E118 := E118 - 1;
-         F2;
+         F3;
       end;
       declare
          procedure Reraise_Library_Exception_If_Any;
@@ -211,15 +220,20 @@ package body ada_main is
       E119 := E119 + 1;
       System.File_Io'Elab_Body;
       E118 := E118 + 1;
+      Ada.Strings.Unbounded'Elab_Spec;
+      Ada.Strings.Unbounded'Elab_Body;
+      E142 := E142 + 1;
       Ada.Text_Io'Elab_Spec;
       Ada.Text_Io'Elab_Body;
       E094 := E094 + 1;
+      E159 := E159 + 1;
+      E161 := E161 + 1;
+      E172 := E172 + 1;
+      E165 := E165 + 1;
+      E167 := E167 + 1;
+      E170 := E170 + 1;
+      Calculator'Elab_Body;
       E140 := E140 + 1;
-      E142 := E142 + 1;
-      E146 := E146 + 1;
-      E148 := E148 + 1;
-      E150 := E150 + 1;
-      E153 := E153 + 1;
    end adainit;
 
    procedure Ada_Main_Program;
@@ -257,15 +271,16 @@ package body ada_main is
    end;
 
 --  BEGIN Object file/option list
-   --   C:\unimelb\2025 sem 1\hise\assignment3\assignment3\obj\memorystore.o
-   --   C:\unimelb\2025 sem 1\hise\assignment3\assignment3\obj\mycommandline.o
-   --   C:\unimelb\2025 sem 1\hise\assignment3\assignment3\obj\mystring.o
-   --   C:\unimelb\2025 sem 1\hise\assignment3\assignment3\obj\mystringtokeniser.o
-   --   C:\unimelb\2025 sem 1\hise\assignment3\assignment3\obj\pin.o
-   --   C:\unimelb\2025 sem 1\hise\assignment3\assignment3\obj\stringtointeger.o
-   --   C:\unimelb\2025 sem 1\hise\assignment3\assignment3\obj\main.o
-   --   -LC:\unimelb\2025 sem 1\hise\assignment3\assignment3\obj\
-   --   -LC:\unimelb\2025 sem 1\hise\assignment3\assignment3\obj\
+   --   C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\obj\memorystore.o
+   --   C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\obj\mycommandline.o
+   --   C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\obj\mystring.o
+   --   C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\obj\mystringtokeniser.o
+   --   C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\obj\pin.o
+   --   C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\obj\stringtointeger.o
+   --   C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\obj\calculator.o
+   --   C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\obj\main.o
+   --   -LC:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\obj\
+   --   -LC:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\obj\
    --   -LC:/gnat/2021/lib/gcc/x86_64-w64-mingw32/10.3.1/adalib/
    --   -static
    --   -lgnat

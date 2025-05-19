@@ -120,7 +120,7 @@ package body Calculator is
             Put_Line("Error: stack underflow");
          end if;
 
-      -- - (Add)
+      -- + (Add)
       elsif Cmd(1 .. 1) = "+" and then Num_Tokens = 1 then
          if not State then
             Put_Line("Error: calculator locked");
@@ -145,7 +145,7 @@ package body Calculator is
             Put_Line("Error: insufficient operands");
          end if;
 
-         -- - (Subtraction)
+      -- - (Subtraction)
       elsif Cmd(1 .. 1) = "-" and then Num_Tokens = 1 then
          if not State then
             Put_Line("Error: calculator locked");
@@ -224,7 +224,7 @@ package body Calculator is
             Put_Line("Error: insufficient operands");
          end if;
 
-            -- storeTo <loc>
+      -- storeTo <loc>
       elsif Cmd(1 .. 7) = "storeTo" and then Num_Tokens = 2 then
          if not State then
             Put_Line("Error: calculator locked");
