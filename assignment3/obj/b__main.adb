@@ -32,13 +32,15 @@ package body ada_main is
    E118 : Short_Integer; pragma Import (Ada, E118, "system__file_io_E");
    E142 : Short_Integer; pragma Import (Ada, E142, "ada__strings__unbounded_E");
    E094 : Short_Integer; pragma Import (Ada, E094, "ada__text_io_E");
-   E159 : Short_Integer; pragma Import (Ada, E159, "memorystore_E");
-   E161 : Short_Integer; pragma Import (Ada, E161, "mycommandline_E");
-   E174 : Short_Integer; pragma Import (Ada, E174, "mystring_E");
-   E165 : Short_Integer; pragma Import (Ada, E165, "mystringtokeniser_E");
-   E167 : Short_Integer; pragma Import (Ada, E167, "pin_E");
-   E170 : Short_Integer; pragma Import (Ada, E170, "stack_E");
-   E172 : Short_Integer; pragma Import (Ada, E172, "stringtointeger_E");
+   E161 : Short_Integer; pragma Import (Ada, E161, "memorystore_E");
+   E180 : Short_Integer; pragma Import (Ada, E180, "mycommandline_E");
+   E184 : Short_Integer; pragma Import (Ada, E184, "mystring_E");
+   E163 : Short_Integer; pragma Import (Ada, E163, "mystringtokeniser_E");
+   E172 : Short_Integer; pragma Import (Ada, E172, "commandparser_E");
+   E165 : Short_Integer; pragma Import (Ada, E165, "pin_E");
+   E168 : Short_Integer; pragma Import (Ada, E168, "stack_E");
+   E170 : Short_Integer; pragma Import (Ada, E170, "stringtointeger_E");
+   E159 : Short_Integer; pragma Import (Ada, E159, "commandhandler_E");
    E140 : Short_Integer; pragma Import (Ada, E140, "calculator_E");
 
    Sec_Default_Sized_Stacks : array (1 .. 1) of aliased System.Secondary_Stack.SS_Stack (System.Parameters.Runtime_Default_Sec_Stack_Size);
@@ -227,13 +229,15 @@ package body ada_main is
       Ada.Text_Io'Elab_Spec;
       Ada.Text_Io'Elab_Body;
       E094 := E094 + 1;
-      E159 := E159 + 1;
       E161 := E161 + 1;
-      E174 := E174 + 1;
-      E165 := E165 + 1;
-      E167 := E167 + 1;
-      E170 := E170 + 1;
+      E180 := E180 + 1;
+      E184 := E184 + 1;
+      E163 := E163 + 1;
       E172 := E172 + 1;
+      E165 := E165 + 1;
+      E168 := E168 + 1;
+      E170 := E170 + 1;
+      E159 := E159 + 1;
       Calculator'Elab_Body;
       E140 := E140 + 1;
    end adainit;
@@ -277,9 +281,11 @@ package body ada_main is
    --   C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\obj\mycommandline.o
    --   C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\obj\mystring.o
    --   C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\obj\mystringtokeniser.o
+   --   C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\obj\commandparser.o
    --   C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\obj\pin.o
    --   C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\obj\stack.o
    --   C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\obj\stringtointeger.o
+   --   C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\obj\commandHandler.o
    --   C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\obj\calculator.o
    --   C:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\obj\main.o
    --   -LC:\unimelb\2025 sem 1\hise\assignment3\HISE_as3\assignment3\obj\

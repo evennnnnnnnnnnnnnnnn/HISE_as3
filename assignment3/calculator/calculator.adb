@@ -9,6 +9,8 @@ with Interfaces;
 
 -- Stack
 with Stack; use Stack;
+with commandHandler; use commandHandler;
+with commandParser; use commandParser;
 
 package body Calculator is
 
@@ -17,6 +19,7 @@ package body Calculator is
    --------------------------------------------------------------------------
    S: Stack.Stack_type;
    Mem : MemoryStore.Database;
+
    --------------------------------------------------------------------------
    --  Process_Command
    --------------------------------------------------------------------------
@@ -25,258 +28,25 @@ package body Calculator is
      State        : in out Boolean;
      Master_Str   : in out String;     -- PIN string, length = 4
      Master_Pin   : in out PIN.PIN     -- PIN object corresponding to Master_Str
-   ) is
-      Tokens     : TokenArray(1 .. 10);
-      Num_Tokens : Natural;
-      Cmd        : String(1 .. 10)              := (others => ' ');
-      Arg1       : Unbounded_String             := Null_Unbounded_String;
-      Arg2       : Unbounded_String             := Null_Unbounded_String;
+     ) is
+      Cmd : Command;
    begin
-      -- 1. Tokenise the input string
-      Tokenise(Command_Line, Tokens, Num_Tokens);
+      -- Parse the command with the Command Parser
+      Cmd := Parse_Command(Command_Line);
 
-      -- 2. Extract the command name into Cmd
-      if Num_Tokens >= 1 then
-         declare
-            E : constant TokenExtent := Tokens(1);
-         begin
-            Cmd(1 .. E.Length) := Command_Line(E.Start .. E.Start + E.Length - 1);
-         end;
-      end if;
-
-      -- 3. Extract first argument (if any) into Arg1
-      if Num_Tokens >= 2 then
-         declare
-            E   : constant TokenExtent := Tokens(2);
-            Sub : constant String       := Command_Line(E.Start .. E.Start + E.Length - 1);
-         begin
-            Arg1 := To_Unbounded_String(Sub);
-         end;
-      end if;
-
-      -- 4. Extract second argument (if any) into Arg2
-      if Num_Tokens >= 3 then
-         declare
-            E   : constant TokenExtent := Tokens(3);
-            Sub : constant String       := Command_Line(E.Start .. E.Start + E.Length - 1);
-         begin
-            Arg2 := To_Unbounded_String(Sub);
-         end;
-      end if;
-
-      -- 5. Handle commands
-
-      -- UNLOCK <pin>
-      if Cmd(1 .. 6) = "unlock" and then Num_Tokens = 2 then
-         if To_String(Arg1) = Master_Str then
-            State := True;
-            Put_Line("Calculator unlocked.");
-         else
-            Put_Line("Error: wrong PIN");
-         end if;
-
-      -- LOCK <newpin>
-      elsif Cmd(1 .. 4) = "lock" and then Num_Tokens = 2 then
-         if State then
-            Master_Str := To_String(Arg1);
-            Master_Pin := PIN.From_String(Master_Str);
-            State      := False;
-            Put_Line("Calculator locked. New PIN set.");
-         else
-            Put_Line("Error: already locked");
-         end if;
-
-      -- PUSH1 <num>
-      elsif Cmd(1 .. 5) = "push1" and then Num_Tokens = 2 then
-         declare
-            V : constant Integer := From_String(To_String(Arg1));
-         begin
-            if Depth(S) < Max_Stack then
-               Push(S, V);
-            else
-               Put_Line("Error: stack overflow");
-            end if;
-         end;
-
-      -- PUSH2 <num1> <num2>
-      elsif Cmd(1 .. 5) = "push2" and then Num_Tokens = 3 then
-         declare
-            V1 : constant Integer := From_String(To_String(Arg1));
-            V2 : constant Integer := From_String(To_String(Arg2));
-         begin
-            if Depth(S) <= Max_Stack - 2 then
-               Push2(S, V1, V2);
-            else
-               Put_Line("Error: stack overflow");
-            end if;
-         end;
-
-      -- POP
-      elsif Cmd(1 .. 3) = "pop" and then Num_Tokens = 1 then
-         if Depth(S) > 0 then
-            Pop(S);
-         else
-            Put_Line("Error: stack underflow");
-         end if;
-
-      -- + (Add)
-      elsif Cmd(1 .. 1) = "+" and then Num_Tokens = 1 then
-         if not State then
-            Put_Line("Error: calculator locked");
-         elsif Depth(S) >= 2 then
-            declare
-               A : Integer := Second_Value(S);
-               B : Integer := Top_Value(S);
-            begin
-               -- Check for potential overflow
-               if (A > 0 and then B > 0 and then A > Integer'Last - B) or
-                 (A < 0 and then B < 0 and then A < Integer'First - B) then
-                  Put_Line("Error: addition would cause overflow");
-               else
-                  Pop(S);
-                  Pop(S);
-                  Push(S, A + B);
-               end if;
-            end;
-         else
-            Put_Line("Error: insufficient operands");
-         end if;
-
-      -- - (Subtraction)
-      elsif Cmd(1 .. 1) = "-" and then Num_Tokens = 1 then
-         if not State then
-            Put_Line("Error: calculator locked");
-         elsif Depth(S) >= 2 then
-            declare
-               A : Integer := Second_Value(S);
-               B : Integer := Top_Value(S);
-            begin
-               -- Check for potential overflow
-               if (A > 0 and then B < 0 and then A > Integer'Last + B) or
-                 (A < 0 and then B > 0 and then A < Integer'First + B) then
-                  Put_Line("Error: subtraction would cause overflow");
-               else
-                  Pop(S);
-                  Pop(S);
-                  Push(S, A - B);
-               end if;
-            end;
-         else
-            Put_Line("Error: insufficient operands");
-         end if;
-
-      -- * (Multiplication)
-      elsif Cmd(1 .. 1) = "*" and then Num_Tokens = 1 then
-         if not State then
-            Put_Line("Error: calculator locked");
-         elsif Depth(S) >= 2 then
-            declare
-               A : Integer := Second_Value(S);
-               B : Integer := Top_Value(S);
-            begin
-
-               if (A > 0 and then B > 0 and then A > Integer'Last / B)
-                 or else
-                  (A < 0 and then B < 0 and then A < Integer'First / B)
-               then
-                  Put_Line("Error: multiplication would cause overflow");
-               else
-                  Pop(S);
-                  Pop(S);
-                  Push(S, A * B);
-               end if;
-            end;
-         else
-            Put_Line("Error: insufficient operands");
-         end if;
-
-      -- / (Division)
-      elsif Cmd(1 .. 1) = "/" and then Num_Tokens = 1 then
-         if not State then
-            Put_Line("Error: calculator locked");
-         elsif Depth(S) >= 2 then
-            declare
-               A : Integer := Second_Value(S);
-               B : Integer := Top_Value(S);
-            begin
-               if B = 0 then
-                  Put_Line("Error: division by zero");
-               elsif A = Integer'First and then B = -1 then
-                  Put_Line("Error: division would cause overflow");
-               else
-                  Pop(S);
-                  Pop(S);
-                  Push(S, A / B);
-
-               end if;
-            end;
-         else
-            Put_Line("Error: insufficient operands");
-         end if;
-
-      -- storeTo <loc>
-      elsif Cmd(1 .. 7) = "storeTo" and then Num_Tokens = 2 then
-         if not State then
-            Put_Line("Error: calculator locked");
-         elsif Depth(S) > 0 then
-            declare
-               Loc_Int : Integer := From_String(To_String(Arg1));
-            begin
-               if Loc_Int in MemoryStore.Location_Index'Range then
-                  MemoryStore.Put(Mem,
-                    MemoryStore.Location_Index(Loc_Int),
-                    Interfaces.Integer_32(Top_Value(S)));
-                  Pop(S);
-               end if;
-            end;
-         else
-            Put_Line("Error: insufficient operands");
-         end if;
-
-      -- loadFrom <loc>
-      elsif Cmd(1 .. 8) = "loadFrom" and then Num_Tokens = 2 then
-         if not State then
-            Put_Line("Error: calculator locked");
-         else
-            declare
-               Loc_Int : Integer := From_String(To_String(Arg1));
-            begin
-               if Loc_Int in MemoryStore.Location_Index'Range and then
-                  MemoryStore.Has(Mem, MemoryStore.Location_Index(Loc_Int))
-               then
-                  Push(S, Integer(MemoryStore.Get(Mem,
-                      MemoryStore.Location_Index(Loc_Int))));
-               end if;
-            end;
-         end if;
-
-      -- remove <loc>
-      elsif Cmd(1 .. 6) = "remove" and then Num_Tokens = 2 then
-         if not State then
-            Put_Line("Error: calculator locked");
-         else
-            declare
-               Loc_Int : Integer := From_String(To_String(Arg1));
-            begin
-               if Loc_Int in MemoryStore.Location_Index'Range then
-                  MemoryStore.Remove(Mem,
-                    MemoryStore.Location_Index(Loc_Int));
-               end if;
-            end;
-         end if;
-
-      -- list
-      elsif Cmd(1 .. 4) = "list" and then Num_Tokens = 1 then
-         if not State then
-            Put_Line("Error: calculator locked");
-         else
-            MemoryStore.Print(Mem);
-         end if;
-
-      -- Unknown command
-      else
-         Put_Line("Error: unknown command");
-      end if;
+      -- Process the command in the Command Handler
+      case Get_Cmd(Cmd) is
+         when Unlock | Lock =>
+            Handle_Lock(Cmd, State, Master_Str, Master_Pin);
+         when Push1 | Push2 | Pop =>
+            Handle_Stack(Cmd, S);
+         when Add | Sub | Mul | Div =>
+            Handle_Arithmetic(Cmd, S);
+         when StoreTo | LoadFrom | Remove | List =>
+            Handle_Memory(Cmd, S, Mem);
+         when others =>
+            Put_Line("Error: Invalid Command");
+      end case;
 
    end Process_Command;
 
@@ -284,7 +54,7 @@ package body Calculator is
    --  Run
    --------------------------------------------------------------------------
    procedure Run is
-      Pin_Str  : String(1 .. 4) := MyCommandLine.Argument(1);
+      Pin_Str  : String(1 .. 4) := "1234";
       Pin_Val  : PIN.PIN       := PIN.From_String(Pin_Str);
       State    : Boolean       := False;
       Line_Buf : String(1 .. 2048);
