@@ -1,4 +1,3 @@
-
 package body MyStringTokeniser with SPARK_Mode is
 
 
@@ -34,7 +33,7 @@ package body MyStringTokeniser with SPARK_Mode is
 
             -- look for end of this token
             while Positive'Last - Extent.Length >= Index
-              and then (Index+Extent.Length >= S'First and Index+Extent.Length <= S'Last)
+              and then (Extent.Length <= S'Last - Index)
               and then not Is_Whitespace(S(Index+Extent.Length)) loop
                Extent.Length := Extent.Length + 1;
             end loop;
@@ -51,7 +50,12 @@ package body MyStringTokeniser with SPARK_Mode is
             end if;
 
             -- advance to first character after the token
-            Index := Index + Extent.Length;
+            if Positive'Last - Extent.Length >= Index then
+               Index := Index + Extent.Length;
+            else
+               -- 如果可能溢出，设置为最大可能值（实际上这种情况很难发生）
+               Index := Positive'Last;
+            end if;
          end if;
       end loop;
       Count := Processed;
