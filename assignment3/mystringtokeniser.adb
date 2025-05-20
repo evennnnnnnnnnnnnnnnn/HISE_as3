@@ -53,7 +53,7 @@ package body MyStringTokeniser with SPARK_Mode is
             if Positive'Last - Extent.Length >= Index then
                Index := Index + Extent.Length;
             else
-               -- 如果可能溢出，设置为最大可能值（实际上这种情况很难发生）
+               -- set to max if overflow
                Index := Positive'Last;
             end if;
          end if;
