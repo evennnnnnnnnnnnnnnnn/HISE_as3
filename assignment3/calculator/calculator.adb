@@ -6,15 +6,16 @@ with PIN;
 with Ada.Strings.Unbounded;   use Ada.Strings.Unbounded;
 with MemoryStore;
 with Interfaces;
+
+-- Stack
+with Stack; use Stack;
+
 package body Calculator is
 
    --------------------------------------------------------------------------
    --  Global stack definitions
    --------------------------------------------------------------------------
-   Max_Stack : constant := 512;
-   type Stack_Type is array(1 .. Max_Stack) of Integer;
-   Stack      : Stack_Type := (others => 0);
-   Top        : Natural    := 0;
+   S: Stack.Stack_type;
    Mem : MemoryStore.Database;
    --------------------------------------------------------------------------
    --  Process_Command
@@ -90,9 +91,8 @@ package body Calculator is
          declare
             V : constant Integer := From_String(To_String(Arg1));
          begin
-            if Top < Max_Stack then
-               Top := Top + 1;
-               Stack(Top) := V;
+            if Depth(S) < Max_Stack then
+               Push(S, V);
             else
                Put_Line("Error: stack overflow");
             end if;
@@ -104,9 +104,8 @@ package body Calculator is
             V1 : constant Integer := From_String(To_String(Arg1));
             V2 : constant Integer := From_String(To_String(Arg2));
          begin
-            if Top <= Max_Stack - 2 then
-               Top := Top + 1; Stack(Top) := V1;
-               Top := Top + 1; Stack(Top) := V2;
+            if Depth(S) <= Max_Stack - 2 then
+               Push2(S, V1, V2);
             else
                Put_Line("Error: stack overflow");
             end if;
@@ -114,8 +113,8 @@ package body Calculator is
 
       -- POP
       elsif Cmd(1 .. 3) = "pop" and then Num_Tokens = 1 then
-         if Top > 0 then
-            Top := Top - 1;
+         if Depth(S) > 0 then
+            Pop(S);
          else
             Put_Line("Error: stack underflow");
          end if;
@@ -124,21 +123,19 @@ package body Calculator is
       elsif Cmd(1 .. 1) = "+" and then Num_Tokens = 1 then
          if not State then
             Put_Line("Error: calculator locked");
-         elsif Top >= 2 then
+         elsif Depth(S) >= 2 then
             declare
-               Op1 : constant Integer := Stack(Top - 1);
-               Op2 : constant Integer := Stack(Top);
-               Result : Integer;
+               A : Integer := Second_Value(S);
+               B : Integer := Top_Value(S);
             begin
                -- Check for potential overflow
-               if (Op1 > 0 and then Op2 > 0 and then Op1 > Integer'Last - Op2) or
-                 (Op1 < 0 and then Op2 < 0 and then Op1 < Integer'First - Op2) then
+               if (A > 0 and then B > 0 and then A > Integer'Last - B) or
+                 (A < 0 and then B < 0 and then A < Integer'First - B) then
                   Put_Line("Error: addition would cause overflow");
                else
-                  Result := Op1 + Op2;
-                  Top := Top - 2;
-                  Top := Top + 1;
-                  Stack(Top) := Result;
+                  Pop(S);
+                  Pop(S);
+                  Push(S, A + B);
                end if;
             end;
          else
@@ -149,21 +146,19 @@ package body Calculator is
       elsif Cmd(1 .. 1) = "-" and then Num_Tokens = 1 then
          if not State then
             Put_Line("Error: calculator locked");
-         elsif Top >= 2 then
+         elsif Depth(S) >= 2 then
             declare
-               Op1 : constant Integer := Stack(Top - 1);
-               Op2 : constant Integer := Stack(Top);
-               Result : Integer;
+               A : Integer := Second_Value(S);
+               B : Integer := Top_Value(S);
             begin
                -- Check for potential overflow
-               if (Op1 > 0 and then Op2 < 0 and then Op1 > Integer'Last + Op2) or
-                 (Op1 < 0 and then Op2 > 0 and then Op1 < Integer'First + Op2) then
+               if (A > 0 and then B < 0 and then A > Integer'Last + B) or
+                 (A < 0 and then B > 0 and then A < Integer'First + B) then
                   Put_Line("Error: subtraction would cause overflow");
                else
-                  Result := Op1 - Op2;
-                  Top := Top - 2;
-                  Top := Top + 1;
-                  Stack(Top) := Result;
+                  Pop(S);
+                  Pop(S);
+                  Push(S, A - B);
                end if;
             end;
          else
@@ -174,23 +169,21 @@ package body Calculator is
       elsif Cmd(1 .. 1) = "*" and then Num_Tokens = 1 then
          if not State then
             Put_Line("Error: calculator locked");
-         elsif Top >= 2 then
+         elsif Depth(S) >= 2 then
             declare
-               Op1    : constant Integer := Stack(Top - 1);
-               Op2    : constant Integer := Stack(Top);
-               Result : Integer;
+               A : Integer := Second_Value(S);
+               B : Integer := Top_Value(S);
             begin
 
-               if (Op1 > 0 and then Op2 > 0 and then Op1 > Integer'Last / Op2)
+               if (A > 0 and then B > 0 and then A > Integer'Last / B)
                  or else
-                  (Op1 < 0 and then Op2 < 0 and then Op1 < Integer'First / Op2)
+                  (A < 0 and then B < 0 and then A < Integer'First / B)
                then
                   Put_Line("Error: multiplication would cause overflow");
                else
-                  Result := Op1 * Op2;
-                  Top := Top - 2;
-                  Top := Top + 1;
-                  Stack(Top) := Result;
+                  Pop(S);
+                  Pop(S);
+                  Push(S, A * B);
                end if;
             end;
          else
@@ -201,23 +194,20 @@ package body Calculator is
       elsif Cmd(1 .. 1) = "/" and then Num_Tokens = 1 then
          if not State then
             Put_Line("Error: calculator locked");
-         elsif Top >= 2 then
+         elsif Depth(S) >= 2 then
             declare
-               Op1 : constant Integer := Stack(Top - 1);
-               Op2 : constant Integer := Stack(Top);
+               A : Integer := Second_Value(S);
+               B : Integer := Top_Value(S);
             begin
-               if Op2 = 0 then
+               if B = 0 then
                   Put_Line("Error: division by zero");
-               elsif Op1 = Integer'First and then Op2 = -1 then
+               elsif A = Integer'First and then B = -1 then
                   Put_Line("Error: division would cause overflow");
                else
-                  declare
-                     Result : constant Integer := Op1 / Op2;
-                  begin
-                     Top := Top - 2;
-                     Top := Top + 1;
-                     Stack(Top) := Result;
-                  end;
+                  Pop(S);
+                  Pop(S);
+                  Push(S, A / B);
+
                end if;
             end;
          else
@@ -228,15 +218,15 @@ package body Calculator is
       elsif Cmd(1 .. 7) = "storeTo" and then Num_Tokens = 2 then
          if not State then
             Put_Line("Error: calculator locked");
-         elsif Top > 0 then
+         elsif Depth(S) > 0 then
             declare
                Loc_Int : Integer := From_String(To_String(Arg1));
             begin
                if Loc_Int in MemoryStore.Location_Index'Range then
                   MemoryStore.Put(Mem,
                     MemoryStore.Location_Index(Loc_Int),
-                    Interfaces.Integer_32(Stack(Top)));
-                  Top := Top - 1;
+                    Interfaces.Integer_32(Top_Value(S)));
+                  Pop(S);
                end if;
             end;
          else
@@ -254,10 +244,8 @@ package body Calculator is
                if Loc_Int in MemoryStore.Location_Index'Range and then
                   MemoryStore.Has(Mem, MemoryStore.Location_Index(Loc_Int))
                then
-                  Top := Top + 1;
-                  Stack(Top) :=
-                    Integer(MemoryStore.Get(Mem,
-                      MemoryStore.Location_Index(Loc_Int)));
+                  Push(S, Integer(MemoryStore.Get(Mem,
+                      MemoryStore.Location_Index(Loc_Int))));
                end if;
             end;
          end if;
@@ -303,6 +291,7 @@ package body Calculator is
       Len      : Natural;
    begin
       MemoryStore.Init(Mem);
+      Initialize(S);
       loop
          -- Prompt
          if State then

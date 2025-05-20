@@ -316,7 +316,7 @@ package ada_main is
    pragma Export (C, u00137, "ada__long_long_integer_text_ioB");
    u00138 : constant Version_32 := 16#4260bde7#;
    pragma Export (C, u00138, "ada__long_long_integer_text_ioS");
-   u00139 : constant Version_32 := 16#f5f4109f#;
+   u00139 : constant Version_32 := 16#95912172#;
    pragma Export (C, u00139, "calculatorB");
    u00140 : constant Version_32 := 16#bfff5563#;
    pragma Export (C, u00140, "calculatorS");
@@ -376,18 +376,22 @@ package ada_main is
    pragma Export (C, u00167, "pinS");
    u00168 : constant Version_32 := 16#10d344d5#;
    pragma Export (C, u00168, "system__exp_intS");
-   u00169 : constant Version_32 := 16#f3a38af4#;
-   pragma Export (C, u00169, "stringtointegerB");
-   u00170 : constant Version_32 := 16#37c4f5b6#;
-   pragma Export (C, u00170, "stringtointegerS");
-   u00171 : constant Version_32 := 16#e1642826#;
-   pragma Export (C, u00171, "mystringB");
-   u00172 : constant Version_32 := 16#ce083c8f#;
-   pragma Export (C, u00172, "mystringS");
-   u00173 : constant Version_32 := 16#eca5ecae#;
-   pragma Export (C, u00173, "system__memoryB");
-   u00174 : constant Version_32 := 16#76873720#;
-   pragma Export (C, u00174, "system__memoryS");
+   u00169 : constant Version_32 := 16#173a5730#;
+   pragma Export (C, u00169, "stackB");
+   u00170 : constant Version_32 := 16#28e1eab1#;
+   pragma Export (C, u00170, "stackS");
+   u00171 : constant Version_32 := 16#f3a38af4#;
+   pragma Export (C, u00171, "stringtointegerB");
+   u00172 : constant Version_32 := 16#37c4f5b6#;
+   pragma Export (C, u00172, "stringtointegerS");
+   u00173 : constant Version_32 := 16#e1642826#;
+   pragma Export (C, u00173, "mystringB");
+   u00174 : constant Version_32 := 16#ce083c8f#;
+   pragma Export (C, u00174, "mystringS");
+   u00175 : constant Version_32 := 16#eca5ecae#;
+   pragma Export (C, u00175, "system__memoryB");
+   u00176 : constant Version_32 := 16#76873720#;
+   pragma Export (C, u00176, "system__memoryS");
 
    --  BEGIN ELABORATION ORDER
    --  ada%s
@@ -559,6 +563,8 @@ package ada_main is
    --  mystringtokeniser%b
    --  pin%s
    --  pin%b
+   --  stack%s
+   --  stack%b
    --  stringtointeger%s
    --  stringtointeger%b
    --  calculator%s
