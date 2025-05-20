@@ -58,13 +58,11 @@ package body Calculator is
       S        : Stack.Stack_type;
       Mem      : MemoryStore.Database;
    begin
-      pragma Annotate (GNATprove, False_Positive,
-                       "might not be initialized", 
-                       "These variables are initialized below");
-      
+
+
       MemoryStore.Init(Mem);
       Initialize(S);
-      
+
       loop
          -- Prompt
          if State then
