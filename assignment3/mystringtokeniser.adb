@@ -8,6 +8,12 @@ package body MyStringTokeniser with SPARK_Mode is
       Processed : Natural := 0;
       OutIndex : Integer := Tokens'First;
    begin
+      if S'Length > 0 and then S'First > S'Last then
+         raise Constraint_Error with "Invalid string range";
+      end if;
+      if Tokens'First > Tokens'Last then
+         raise Constraint_Error with "Invalid token array range";
+      end if;
       Count := 0;
       if (S'First > S'Last) then
          return;

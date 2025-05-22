@@ -87,6 +87,9 @@ package body MyString is
       R : MyString := (Length => To - From + 1, Str => (others => ' '));
       J : Positive := R.Str'First;
    begin
+      if From > To or To > Length(M) then
+         raise Constraint_Error with "Invalid substring range";
+      end if;
       for I in From..To loop
          pragma Loop_Invariant (J = I - From + 1);
          R.Str(J) := M.Str(I);

@@ -24,6 +24,9 @@ package body MyCommandLine is
 
    function Argument(Number : in Positive) return String is
    begin
+      if Number > Argument_Count then
+         raise Constraint_Error with "Argument number exceeds available arguments";
+      end if;
       return Ada.Command_Line.Argument(Number);
    end Argument;
 
