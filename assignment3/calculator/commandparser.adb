@@ -14,9 +14,12 @@ package body commandParser is
       Arg2       : Unbounded_String             := Null_Unbounded_String;
       Cmd        : Command;
    begin
+      if Command_Line'Length = 0 then
+         raise Constraint_Error with "Empty command line";
+      end if;
+
       -- 1. Tokenise the input string
       Tokenise(Command_Line, Tokens, Num_Tokens);
-
 
       -- 2. Extract the command name into Cmd
       if Num_Tokens >= 1 then
@@ -58,6 +61,10 @@ package body commandParser is
    function From_String(S : String) return Command_Kind is   
       Trimmed : constant String := Trim(S, Both);
    begin
+      if S'Length = 0 then
+         raise Constraint_Error with "Empty command string";
+      end if;
+
       if Trimmed = "+" then
          return Add;
       elsif Trimmed = "-" then
@@ -96,14 +103,18 @@ package body commandParser is
    
    function Get_Arg1(Cmd : Command) return Unbounded_String is
    begin
+      if not (Get_Cmd(Cmd) in Push1 | Push2 | StoreTo | LoadFrom) then
+         raise Constraint_Error with "Command does not support first argument";
+      end if;
       return Cmd.Arg1;
    end Get_Arg1;
    
    function Get_Arg2(Cmd : Command) return Unbounded_String is
    begin
+      if Get_Cmd(Cmd) /= Push2 then
+         raise Constraint_Error with "Command does not support second argument";
+      end if;
       return Cmd.Arg2;
    end Get_Arg2;
-   
-      
    
 end commandParser;
