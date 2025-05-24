@@ -43,18 +43,18 @@ package body MyStringTokeniser with SPARK_Mode is
             Processed := Processed + 1;
 
             -- check for last possible token, avoids overflow when incrementing OutIndex
-            if (OutIndex = Tokens'Last) then
-               Count := Processed;
+            if (outindex = tokens'last) then
+               count := processed;
                return;
             else
-               OutIndex := OutIndex + 1;
+               outindex := outindex + 1;
             end if;
 
-            -- check for end of string, avoids overflow when incrementing Index
-            if S'Last - Extent.Length < Index then
+            -- check for end of string, avoids overflow when incrementing index
+            if s'last - extent.length < index then
                return;
             else
-               Index := Index + Extent.Length;
+               index := index + extent.length;
             end if;
          end if;
       end loop;
