@@ -44,13 +44,27 @@ begin
    ------------------------------------------------------------------
 
    MemoryStore.Init (Mem);
+   
+   
 
    Put_Line ("Storing 50 at location 10 ...");
    MemoryStore.Put (Mem, Loc1, 50);
 
    Put ("Location 10 now holds: ");
-   Ada.Integer_Text_IO.Put (Integer (MemoryStore.Get (Mem, Loc1)), 0);
+   
+   if MemoryStore.Has (Mem, Loc1) then
+      pragma Assert (MemoryStore.Has (Mem, Loc1));
+      Ada.Integer_Text_IO.Put (
+        Integer (MemoryStore.Get (Mem, Loc1)),
+        0
+      );
+   else
+      Put_Line ("<no value at loc " & Loc1'Image & ">");
+   end if;
    New_Line;
+
+   
+   
 
    Put_Line ("Listing defined locations:");
    MemoryStore.Print (Mem);
@@ -75,6 +89,7 @@ begin
       T : MyStringTokeniser.TokenArray(1..3) := (others => (Start => 1, Length => 0));
       NumTokens : Natural;
    begin
+      pragma Assert (Lines.To_String(S)'Length <= Integer'Last / 2);
       MyStringTokeniser.Tokenise(Lines.To_String(S),T,NumTokens);
       Put("You entered "); Put(NumTokens); Put_Line(" tokens.");
       if NumTokens > 3 then

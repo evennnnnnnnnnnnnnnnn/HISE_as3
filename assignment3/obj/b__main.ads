@@ -316,7 +316,7 @@ package ada_main is
    pragma Export (C, u00137, "ada__long_long_integer_text_ioB");
    u00138 : constant Version_32 := 16#4260bde7#;
    pragma Export (C, u00138, "ada__long_long_integer_text_ioS");
-   u00139 : constant Version_32 := 16#1229ee2c#;
+   u00139 : constant Version_32 := 16#a234441f#;
    pragma Export (C, u00139, "calculatorB");
    u00140 : constant Version_32 := 16#bfff5563#;
    pragma Export (C, u00140, "calculatorS");
@@ -356,7 +356,7 @@ package ada_main is
    pragma Export (C, u00157, "system__fat_llfS");
    u00158 : constant Version_32 := 16#e69fb03b#;
    pragma Export (C, u00158, "commandhandlerB");
-   u00159 : constant Version_32 := 16#1302afca#;
+   u00159 : constant Version_32 := 16#a31f05f9#;
    pragma Export (C, u00159, "commandhandlerS");
    u00160 : constant Version_32 := 16#57817ae9#;
    pragma Export (C, u00160, "memorystoreB");
@@ -380,9 +380,9 @@ package ada_main is
    pragma Export (C, u00169, "stringtointegerB");
    u00170 : constant Version_32 := 16#37c4f5b6#;
    pragma Export (C, u00170, "stringtointegerS");
-   u00171 : constant Version_32 := 16#b2ff328c#;
+   u00171 : constant Version_32 := 16#29a6a304#;
    pragma Export (C, u00171, "commandparserB");
-   u00172 : constant Version_32 := 16#4b0cdacc#;
+   u00172 : constant Version_32 := 16#fb1170ff#;
    pragma Export (C, u00172, "commandparserS");
    u00173 : constant Version_32 := 16#38316a5a#;
    pragma Export (C, u00173, "ada__strings__equal_case_insensitiveB");

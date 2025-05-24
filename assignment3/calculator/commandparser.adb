@@ -1,3 +1,5 @@
+pragma SPARK_Mode (On);
+
 with MyStringTokeniser;       use MyStringTokeniser;
 with Ada.Strings.Unbounded;   use Ada.Strings.Unbounded;
 with MyStringTokeniser;       use MyStringTokeniser;
@@ -14,15 +16,19 @@ package body commandParser is
       Arg2       : Unbounded_String             := Null_Unbounded_String;
       Cmd        : Command;
    begin
+      pragma Assert (Command_Line'Length > 0, "Command line cannot be empty");
+      pragma Assert (Command_Line'Length <= Integer'Last / 2);
+      
       -- 1. Tokenise the input string
       Tokenise(Command_Line, Tokens, Num_Tokens);
-
+      pragma Assert (Num_Tokens <= 10, "Too many tokens");
 
       -- 2. Extract the command name into Cmd
       if Num_Tokens >= 1 then
          declare
             E : constant TokenExtent := Tokens(1);
          begin
+            pragma Assert (E.Start + E.Length - 1 <= Command_Line'Last, "Token extent out of bounds");
             Cmd_String(1 .. E.Length) := Command_Line(E.Start .. E.Start + E.Length - 1);
          end;
       end if;
@@ -33,6 +39,7 @@ package body commandParser is
             E   : constant TokenExtent := Tokens(2);
             Sub : constant String       := Command_Line(E.Start .. E.Start + E.Length - 1);
          begin
+            pragma Assert (E.Start + E.Length - 1 <= Command_Line'Last, "Token extent out of bounds");
             Arg1 := To_Unbounded_String(Sub);
          end;
       end if;
@@ -43,6 +50,7 @@ package body commandParser is
             E   : constant TokenExtent := Tokens(3);
             Sub : constant String       := Command_Line(E.Start .. E.Start + E.Length - 1);
          begin
+            pragma Assert (E.Start + E.Length - 1 <= Command_Line'Last, "Token extent out of bounds");
             Arg2 := To_Unbounded_String(Sub);
          end;
       end if;
@@ -58,6 +66,8 @@ package body commandParser is
    function From_String(S : String) return Command_Kind is   
       Trimmed : constant String := Trim(S, Both);
    begin
+      pragma Assert (S'Length > 0, "Input string cannot be empty");
+      
       if Trimmed = "+" then
          return Add;
       elsif Trimmed = "-" then
@@ -103,7 +113,5 @@ package body commandParser is
    begin
       return Cmd.Arg2;
    end Get_Arg2;
-   
-      
    
 end commandParser;
