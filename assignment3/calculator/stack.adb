@@ -1,6 +1,6 @@
 with Ada.Text_IO;             use Ada.Text_IO;
 
-package body Stack is
+package body Stack with SPARK_Mode is
    procedure Initialize(S: out Stack_type) is
    begin
       S.Top := 0;
@@ -10,7 +10,7 @@ package body Stack is
    procedure Push(S: in out Stack_type; V: Integer) is
    begin
       if Depth(S) >= Max_Stack then
-         raise Constraint_Error with "Stack overflow";
+         return;
       end if;
       S.Top := S.Top + 1;
       S.Data(S.Top) := V;
@@ -53,5 +53,5 @@ package body Stack is
    begin
       return S.Top;
    end Depth;
-
+   
 end Stack;

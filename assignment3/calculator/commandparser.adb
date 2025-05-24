@@ -5,19 +5,15 @@ with Ada.Strings.Equal_Case_Insensitive; use Ada.Strings;
 with Ada.Strings.Fixed; use Ada.Strings.Fixed;
 with Ada.Text_IO; use Ada.Text_IO;
 
-package body commandParser is
+package body commandParser with SPARK_Mode is
    function Parse_Command(Command_Line: String) return Command is
-      Tokens     : TokenArray(1 .. 10);
+      Tokens     : TokenArray(1 .. 10) := (others => (Start => 1, Length => 0));
       Num_Tokens : Natural;
-      Cmd_String : String(1 .. 10)              := (others => ' ');
-      Arg1       : Unbounded_String             := Null_Unbounded_String;
-      Arg2       : Unbounded_String             := Null_Unbounded_String;
+      Cmd_String : String(1 .. 10) := (others => ' ');
+      Arg1       : Unbounded_String := Null_Unbounded_String;
+      Arg2       : Unbounded_String := Null_Unbounded_String;
       Cmd        : Command;
    begin
-      if Command_Line'Length = 0 then
-         raise Constraint_Error with "Empty command line";
-      end if;
-
       -- 1. Tokenise the input string
       Tokenise(Command_Line, Tokens, Num_Tokens);
 
@@ -26,7 +22,8 @@ package body commandParser is
          declare
             E : constant TokenExtent := Tokens(1);
          begin
-            Cmd_String(1 .. E.Length) := Command_Line(E.Start .. E.Start + E.Length - 1);
+            Cmd_String(1 .. E.Length) := Safe_Slice(Command_Line, E);
+
          end;
       end if;
 
@@ -34,8 +31,9 @@ package body commandParser is
       if Num_Tokens >= 2 then
          declare
             E   : constant TokenExtent := Tokens(2);
-            Sub : constant String       := Command_Line(E.Start .. E.Start + E.Length - 1);
+            Sub : constant String       := Safe_Slice(Command_Line, E);
          begin
+            
             Arg1 := To_Unbounded_String(Sub);
          end;
       end if;
@@ -44,7 +42,7 @@ package body commandParser is
       if Num_Tokens >= 3 then
          declare
             E   : constant TokenExtent := Tokens(3);
-            Sub : constant String       := Command_Line(E.Start .. E.Start + E.Length - 1);
+            Sub : constant String       := Safe_Slice(Command_Line, E);
          begin
             Arg2 := To_Unbounded_String(Sub);
          end;
@@ -57,6 +55,11 @@ package body commandParser is
 
       return Cmd;
    end Parse_Command;
+   
+   function Safe_Slice(Command : String; Ext : TokenExtent) return String is
+   begin
+      return Command(Ext.Start .. Ext.Start + Ext.Length - 1);
+   end Safe_Slice;
       
    function From_String(S : String) return Command_Kind is   
       Trimmed : constant String := Trim(S, Both);
@@ -92,7 +95,7 @@ package body commandParser is
       elsif Trimmed = "list" then
          return List;
       else
-         raise Constraint_Error with "Unknown command string: " & S;
+         return Unknown;
       end if;
    end From_String;
 

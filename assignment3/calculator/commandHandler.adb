@@ -8,7 +8,7 @@ with Ada.Strings.Unbounded;   use Ada.Strings.Unbounded;
 with MemoryStore;
 with Interfaces;
 
-package body commandHandler is
+package body commandHandler with SPARK_Mode is
 
    procedure Handle_Lock(Cmd : in Command;
                          State : in out Boolean;
@@ -26,14 +26,21 @@ package body commandHandler is
 
       -- LOCK <newpin>
       elsif Get_Cmd(Cmd) = Lock then
-         if State then
-            Master_Str := To_String(Get_Arg1(Cmd));
-            Master_Pin := PIN.From_String(Master_Str);
-            State      := False;
-            Put_Line("Calculator locked. New PIN set.");
-         else
-            Put_Line("Error: already locked");
-         end if;
+         declare
+            New_Pin : String := To_String(Get_Arg1(Cmd));
+         begin   
+            if State and then Master_Str'Length = New_Pin'Length and then 
+              (for all C of New_Pin => C in '0' .. '9') 
+            then
+               Master_Str := To_String(Get_Arg1(Cmd));
+               Master_Pin := PIN.From_String(Master_Str);
+               State      := False;
+               Put_Line("Calculator locked. New PIN set.");
+            else
+               Put_Line("Error: already locked");
+            end if;
+         end;
+         
       end if;
    end Handle_Lock;
       
@@ -84,13 +91,14 @@ package body commandHandler is
                B : Integer := Top_Value(S);
             begin
                -- Check for potential overflow
-               if (A > 0 and then B > 0 and then A > Integer'Last - B) or
-                 (A < 0 and then B < 0 and then A < Integer'First - B) then
-                  Put_Line("Error: addition would cause overflow");
-               else
+               if (A > 0 and then B > 0 and then A <= Integer'Last - B) and
+                 (A < 0 and then B < 0 and then A >= Integer'First - B) and 
+                 Depth(S) < Max_Stack
+               then
                   Pop(S);
                   Pop(S);
                   Push(S, A + B);
+                  
                end if;
             end;
          else
@@ -105,13 +113,13 @@ package body commandHandler is
                B : Integer := Top_Value(S);
             begin
                -- Check for potential overflow
-               if (A > 0 and then B < 0 and then A > Integer'Last + B) or
-                 (A < 0 and then B > 0 and then A < Integer'First + B) then
-                  Put_Line("Error: subtraction would cause overflow");
-               else
+               if (A > 0 and then B < 0 and then A <= Integer'Last + B) and
+                 (A < 0 and then B > 0 and then A >= Integer'First + B) and
+                 Depth(S) < Max_Stack
+               then
                   Pop(S);
                   Pop(S);
-                  Push(S, A - B);
+                  Push(S, A - B); 
                end if;
             end;
          else
@@ -126,15 +134,17 @@ package body commandHandler is
                B : Integer := Top_Value(S);
             begin
 
-               if (A > 0 and then B > 0 and then A > Integer'Last / B)
-                 or else
-                  (A < 0 and then B < 0 and then A < Integer'First / B)
+               if (A > 0 and then B > 0 and then A <= Integer'Last / B) and
+                 (A < 0 and then B < 0 and then B <= Integer'Last / A) and
+                 (A < 0 and then B > 0 and then A >= Integer'First / B) and
+                 (A > 0 and then B < 0 and then B >= Integer'First / A) and
+                 Depth(S) < Max_Stack
                then
-                  Put_Line("Error: multiplication would cause overflow");
-               else
                   Pop(S);
                   Pop(S);
-                  Push(S, A * B);
+                  if Depth(S) < Max_Stack then
+                     Push(S, A * B);
+                  end if;
                end if;
             end;
          else
@@ -152,11 +162,10 @@ package body commandHandler is
                   Put_Line("Error: division by zero");
                elsif A = Integer'First and then B = -1 then
                   Put_Line("Error: division would cause overflow");
-               else
+               elsif Depth(S) < Max_Stack then
                   Pop(S);
                   Pop(S);
                   Push(S, A / B);
-
                end if;
             end;
          else
@@ -190,7 +199,8 @@ package body commandHandler is
             Loc_Int : Integer := From_String(To_String(Get_Arg1(Cmd)));
          begin
             if Loc_Int in MemoryStore.Location_Index'Range and then
-               MemoryStore.Has(Mem, MemoryStore.Location_Index(Loc_Int))
+              MemoryStore.Has(Mem, MemoryStore.Location_Index(Loc_Int)) and then
+              Depth(S) < Max_Stack
             then
                Push(S, Integer(MemoryStore.Get(Mem,
                    MemoryStore.Location_Index(Loc_Int))));

@@ -12,7 +12,7 @@ with Stack; use Stack;
 with commandHandler; use commandHandler;
 with commandParser; use commandParser;
 
-package body Calculator is
+package body Calculator with SPARK_Mode is
 
    --------------------------------------------------------------------------
    --  Process_Command
@@ -40,8 +40,8 @@ package body Calculator is
             Handle_Arithmetic(Cmd, S);
          when StoreTo | LoadFrom | Remove | List =>
             Handle_Memory(Cmd, S, Mem);
-         when others =>
-            Put_Line("Error: Invalid Command");
+         when Unknown =>
+            Put_Line("Error: Invalid Command, Please Try Again");
       end case;
 
    end Process_Command;
@@ -51,7 +51,7 @@ package body Calculator is
    --------------------------------------------------------------------------
    procedure Run is
       Pin_Str  : String(1 .. 4) := "1234";
-      Pin_Val  : PIN.PIN       := PIN.From_String(Pin_Str);
+      Pin_Val  : PIN.PIN;
       State    : Boolean       := False;
       Line_Buf : String(1 .. 2048);
       Len      : Natural;
@@ -59,9 +59,18 @@ package body Calculator is
       Mem      : MemoryStore.Database;
    begin
 
-
+      -- Initialization
       MemoryStore.Init(Mem);
       Initialize(S);
+
+
+      if Pin_Str'Length = 4 and then
+        (for all C of Pin_Str => C in '0' .. '9') then
+         Pin_Val := PIN.From_String(Pin_Str);
+      else
+         Put_Line("Invalid PIN format.");
+         return;
+      end if;
 
       loop
          -- Prompt
