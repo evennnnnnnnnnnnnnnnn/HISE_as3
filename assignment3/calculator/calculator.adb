@@ -15,15 +15,19 @@ with commandParser; use commandParser;
 package body Calculator is
 
    --------------------------------------------------------------------------
+   --  Global stack definitions
+   --------------------------------------------------------------------------
+   S: Stack.Stack_type;
+   Mem : MemoryStore.Database;
+
+   --------------------------------------------------------------------------
    --  Process_Command
    --------------------------------------------------------------------------
    procedure Process_Command(
      Command_Line : String;
      State        : in out Boolean;
      Master_Str   : in out String;     -- PIN string, length = 4
-     Master_Pin   : in out PIN.PIN;    -- PIN object corresponding to Master_Str
-     S            : in out Stack.Stack_type;
-     Mem          : in out MemoryStore.Database
+     Master_Pin   : in out PIN.PIN     -- PIN object corresponding to Master_Str
      ) is
       Cmd : Command;
    begin
@@ -55,14 +59,9 @@ package body Calculator is
       State    : Boolean       := False;
       Line_Buf : String(1 .. 2048);
       Len      : Natural;
-      S        : Stack.Stack_type;
-      Mem      : MemoryStore.Database;
    begin
-
-
       MemoryStore.Init(Mem);
       Initialize(S);
-
       loop
          -- Prompt
          if State then
@@ -87,7 +86,7 @@ package body Calculator is
          end if;
 
          -- Dispatch
-         Process_Command(Line_Buf(1 .. Len), State, Pin_Str, Pin_Val, S, Mem);
+         Process_Command(Line_Buf(1 .. Len), State, Pin_Str, Pin_Val);
       end loop;
    end Run;
 

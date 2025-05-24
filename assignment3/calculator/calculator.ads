@@ -1,6 +1,5 @@
 with MemoryStore;
 
-package Calculator with SPARK_Mode is
-   pragma Elaborate_Body;
+package Calculator is
    procedure Run;
 end Calculator;
