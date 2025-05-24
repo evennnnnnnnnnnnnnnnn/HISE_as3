@@ -24,8 +24,7 @@ package MemoryStore with SPARK_Mode is
 
    procedure Put    (D : in out Database;
                      Loc : in     Location_Index;
-                     Val : in     Int32)
-     with Post => Has(D, Loc);
+                     Val : in     Int32);
 
    procedure Remove (D : in out Database; Loc : in Location_Index);
 

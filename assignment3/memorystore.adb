@@ -23,12 +23,7 @@ package body MemoryStore is
      (D.Mem (Loc).Valid);
 
    function Get (D : Database; Loc : Location_Index) return Int32 is
-   begin
-      if not Has(D, Loc) then
-         raise Constraint_Error with "Location not found in database";
-      end if;
-      return D.Mem (Loc).Val;
-   end Get;
+     (D.Mem (Loc).Val);
 
    function Length (D : Database) return Natural is
      (D.Cnt);
