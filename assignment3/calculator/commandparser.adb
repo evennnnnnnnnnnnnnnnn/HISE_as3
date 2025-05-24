@@ -2,7 +2,7 @@ pragma SPARK_Mode (On);
 with MyStringTokeniser; use MyStringTokeniser;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Strings.Fixed;    use Ada.Strings.Fixed;
-package body commandParser is
+package body commandParser with SPARK_Mode is
    --  Compute safe end index of token
    function Token_End (E : TokenExtent) return Integer is
    begin

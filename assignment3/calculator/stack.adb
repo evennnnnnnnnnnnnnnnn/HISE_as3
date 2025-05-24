@@ -1,6 +1,6 @@
 pragma SPARK_Mode (On);
 
-package body Stack is
+package body Stack with SPARK_Mode is
    
    procedure Initialize(S: out Stack_type) is
    begin
