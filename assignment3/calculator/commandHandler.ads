@@ -13,20 +13,20 @@ package commandHandler with SPARK_Mode is
                          Master_Str : in out String;
                          Master_Pin : in out PIN.PIN) with
      Pre => (if Get_Cmd(Cmd) = Unlock then not State) and (if Get_Cmd(Cmd) = Lock then State)
-            and Master_Str'Length = 4;
-     --  Post =>
-     --   -- If UNLOCK and correct PIN, then State becomes True
-     --     (if Get_Cmd(Cmd) = Unlock and then To_String(Get_Arg1(Cmd)) = Master_Str then State = True)
-     --     and
-     --   -- If LOCK and State was True, then State becomes False and Master_Pin is updated
-     --  (if Get_Cmd(Cmd) = Lock and then State'Old = True and then
-     --      Master_Str'Length = To_String(Get_Arg1(Cmd))'Length and then
-     --       (for all C of To_String(Get_Arg1(Cmd)) => C in '0' .. '9')
-     --           then
-     --             Master_Str = To_String(Get_Arg1(Cmd)) and then
-     --          State = False
-     --        -- Check Master Pin updated when Lock is performed
-     --        and then Master_Pin = From_String(Master_Str));
+            and Master_Str'Length = 4,
+       Post =>
+        -- If UNLOCK and correct PIN, then State becomes True
+          (if Get_Cmd(Cmd) = Unlock and then To_String(Get_Arg1(Cmd)) = Master_Str then State = True)
+          and
+        -- If LOCK and State was True, then State becomes False and Master_Pin is updated
+       (if Get_Cmd(Cmd) = Lock and then State'Old = True and then
+           Master_Str'Length = To_String(Get_Arg1(Cmd))'Length and then
+            (for all C of To_String(Get_Arg1(Cmd)) => C in '0' .. '9')
+                then
+                  Master_Str = To_String(Get_Arg1(Cmd)) and then
+               State = False
+             -- Check Master Pin updated when Lock is performed
+             and then Master_Pin = From_String(Master_Str));
 
 
    procedure Handle_Stack(Cmd : in Command; State: in Boolean; S : in out Stack_type) with

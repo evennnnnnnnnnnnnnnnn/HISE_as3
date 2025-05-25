@@ -7,7 +7,11 @@ package commandParser with SPARK_Mode is
    type Command_Kind is (Lock, Unlock, Push1, Push2, Pop,
                          Add, Sub, Mul, Div,
                          StoreTo, LoadFrom, Remove, List, Unknown);
-   type Command is private;
+   type Command is record
+      Cmd  : Command_Kind;
+      Arg1 : Unbounded_String;
+      Arg2 : Unbounded_String;
+   end record;
    
    --  Parse a command line string
    --  Returns a command with Lock as default if parsing fails
@@ -28,15 +32,16 @@ package commandParser with SPARK_Mode is
    
    function Get_Cmd  (Cmd : Command) return Command_Kind
      with Global => null, Post => Get_Cmd'Result in Command_Kind;
-   function Get_Arg1 (Cmd : Command) return Unbounded_String
-     with Global => null, Pre => (Get_Cmd(Cmd) in Lock | Unlock | Push1 | Push2 | StoreTo | LoadFrom | Remove);
 
+   function Get_Arg1 (Cmd : Command) return Unbounded_String is
+     (case Get_Cmd(Cmd) is
+         when Lock | Unlock | Push1 | StoreTo | LoadFrom | Remove => Cmd.Arg1,
+         when Push2 => Cmd.Arg1,
+         when others => Null_Unbounded_String)
+        with Global => null,
+        Pre => (Get_Cmd(Cmd) in Lock | Unlock | Push1 | Push2 | StoreTo | LoadFrom | Remove);
+  
    function Get_Arg2 (Cmd : Command) return Unbounded_String
      with Global => null, Pre => (Get_Cmd(Cmd) in Push2);
-private
-   type Command is record
-      Cmd  : Command_Kind;
-      Arg1 : Unbounded_String;
-      Arg2 : Unbounded_String;
-   end record;
+
 end commandParser;

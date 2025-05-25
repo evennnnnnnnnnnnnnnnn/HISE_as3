@@ -122,6 +122,6 @@ package body commandParser with SPARK_Mode is
    
    --  Getters
    function Get_Cmd  (Cmd : Command) return Command_Kind     is (Cmd.Cmd);
-   function Get_Arg1 (Cmd : Command) return Unbounded_String is (Cmd.Arg1);
+
    function Get_Arg2 (Cmd : Command) return Unbounded_String is (Cmd.Arg2);
 end commandParser;
