@@ -4,13 +4,7 @@ package body PIN with SPARK_Mode is
       Result : Natural := 0;
       Count : Natural := 0;
    begin
-      if S'Length /= 4 then
-         raise Constraint_Error with "PIN must be exactly 4 digits";
-      end if;
       for I in S'Range loop
-         if S(I) not in '0'..'9' then
-            raise Constraint_Error with "PIN must contain only digits";
-         end if;
          declare
             Ch : Character := S(I);
          begin

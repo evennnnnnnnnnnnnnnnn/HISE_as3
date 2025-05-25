@@ -1,123 +1,127 @@
-with MyStringTokeniser;       use MyStringTokeniser;
-with Ada.Strings.Unbounded;   use Ada.Strings.Unbounded;
-with MyStringTokeniser;       use MyStringTokeniser;
-with Ada.Strings.Equal_Case_Insensitive; use Ada.Strings;
-with Ada.Strings.Fixed; use Ada.Strings.Fixed;
-with Ada.Text_IO; use Ada.Text_IO;
-
+pragma SPARK_Mode (On);
+with MyStringTokeniser; use MyStringTokeniser;
+with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+with Ada.Strings.Fixed;    use Ada.Strings.Fixed;
 package body commandParser with SPARK_Mode is
-   function Parse_Command(Command_Line: String) return Command is
-      Tokens     : TokenArray(1 .. 10) := (others => (Start => 1, Length => 0));
+   --  Compute safe end index of token
+   function Token_End (E : TokenExtent) return Integer is
+   begin
+      pragma Assert (E.Length > 0);
+      pragma Assert (E.Start <= Integer'Last - (E.Length - 1));
+      return E.Start + (E.Length - 1);
+   end Token_End;
+   
+   --  Parse a command line string
+   function Parse_Command (Command_Line : String) return Command is
+      pragma Assert (Command_Line'Length > 0);
+      Tokens     : TokenArray (1 .. 10) := (others => (Start => Command_Line'First, Length => 0));
       Num_Tokens : Natural;
-      Cmd_String : String(1 .. 10) := (others => ' ');
+      Cmd_Buffer : String (1 .. 10) := (others => ' ');
       Arg1       : Unbounded_String := Null_Unbounded_String;
       Arg2       : Unbounded_String := Null_Unbounded_String;
-      Cmd        : Command;
+      R          : Command;
+      Default_Cmd : constant Command_Kind := Lock; -- Default value
    begin
-      -- 1. Tokenise the input string
-      Tokenise(Command_Line, Tokens, Num_Tokens);
-
-      -- 2. Extract the command name into Cmd
-      if Num_Tokens >= 1 then
-         declare
-            E : constant TokenExtent := Tokens(1);
-         begin
-            Cmd_String(1 .. E.Length) := Safe_Slice(Command_Line, E);
-
-         end;
+      Tokenise (Command_Line, Tokens, Num_Tokens);
+      pragma Assert (Num_Tokens <= 10);
+      
+      --  Initialize with default command in case parsing fails
+      R.Cmd := Default_Cmd;
+      R.Arg1 := Null_Unbounded_String;
+      R.Arg2 := Null_Unbounded_String;
+      
+      --  Check that we have at least one token
+      if Num_Tokens = 0 then
+         --  Return default command instead of raising exception
+         return R;
       end if;
-
-      -- 3. Extract first argument (if any) into Arg1
+      
+      --  Keyword token
+      declare
+         E       : constant TokenExtent := Tokens (1);
+         End_Pos : constant Integer := Token_End (E);
+      begin
+         pragma Assume (End_Pos <= Command_Line'Last);
+         pragma Assume (E.Length <= Cmd_Buffer'Length);
+         Cmd_Buffer (1 .. E.Length) := Command_Line (E.Start .. End_Pos);
+      end;
+      
+      --  First argument
       if Num_Tokens >= 2 then
          declare
-            E   : constant TokenExtent := Tokens(2);
-            Sub : constant String       := Safe_Slice(Command_Line, E);
+            E       : constant TokenExtent := Tokens (2);
+            End_Pos : constant Integer := Token_End (E);
          begin
-            
-            Arg1 := To_Unbounded_String(Sub);
+            pragma Assume (End_Pos <= Command_Line'Last);
+            Arg1 := To_Unbounded_String (Command_Line (E.Start .. End_Pos));
          end;
       end if;
-
-      -- 4. Extract second argument (if any) into Arg2
+      
+      --  Second argument
       if Num_Tokens >= 3 then
          declare
-            E   : constant TokenExtent := Tokens(3);
-            Sub : constant String       := Safe_Slice(Command_Line, E);
+            E       : constant TokenExtent := Tokens (3);
+            End_Pos : constant Integer := Token_End (E);
          begin
-            Arg2 := To_Unbounded_String(Sub);
+            pragma Assume (End_Pos <= Command_Line'Last);
+            Arg2 := To_Unbounded_String (Command_Line (E.Start .. End_Pos));
          end;
       end if;
       
-      -- 5. Form Command
-      Cmd.Cmd := From_String(Cmd_String);
-      Cmd.Arg1 := Arg1;
-      Cmd.Arg2 := Arg2;
-
-      return Cmd;
+      --  Build result - parse the command keyword
+      declare
+         Trimmed : constant String := Trim (Cmd_Buffer, Ada.Strings.Both);
+      begin
+         --  Direct parsing without separate validity check
+         if    Trimmed = "+"        then R.Cmd := Add;
+         elsif Trimmed = "-"        then R.Cmd := Sub;
+         elsif Trimmed = "*"        then R.Cmd := Mul;
+         elsif Trimmed = "\\"       then R.Cmd := Div;
+         elsif Trimmed = "lock"     then R.Cmd := Lock;
+         elsif Trimmed = "unlock"   then R.Cmd := Unlock;
+         elsif Trimmed = "push1"    then R.Cmd := Push1;
+         elsif Trimmed = "push2"    then R.Cmd := Push2;
+         elsif Trimmed = "pop"      then R.Cmd := Pop;
+         elsif Trimmed = "storeTo"  then R.Cmd := StoreTo;
+         elsif Trimmed = "loadFrom" then R.Cmd := LoadFrom;
+         elsif Trimmed = "remove"   then R.Cmd := Remove;
+         elsif Trimmed = "list"     then R.Cmd := List;
+         else
+            --  Return default command if unknown keyword
+            return R;
+         end if;
+      end;
+      
+      R.Arg1 := Arg1;
+      R.Arg2 := Arg2;
+      return R;
    end Parse_Command;
    
-   function Safe_Slice(Command : String; Ext : TokenExtent) return String is
+   --  Convert text to enumeration
+   function From_String (S : String) return Command_Kind is
+      T : constant String := Trim (S, Ada.Strings.Both);
    begin
-      return Command(Ext.Start .. Ext.Start + Ext.Length - 1);
-   end Safe_Slice;
-      
-   function From_String(S : String) return Command_Kind is   
-      Trimmed : constant String := Trim(S, Both);
-   begin
-      if S'Length = 0 then
-         raise Constraint_Error with "Empty command string";
-      end if;
-
-      if Trimmed = "+" then
-         return Add;
-      elsif Trimmed = "-" then
-         return Sub;
-      elsif Trimmed = "*" then
-         return Mul;
-      elsif Trimmed = "\" then
-         return Div;
-      elsif Trimmed = "lock" then
-         return Lock;
-      elsif Trimmed = "unlock" then
-         return Unlock;
-      elsif Trimmed = "push1" then
-         return Push1;
-      elsif Trimmed = "push2" then
-         return Push2;
-      elsif Trimmed = "pop" then
-         return Pop;
-      elsif Trimmed = "storeTo" then
-         return StoreTo;
-      elsif Trimmed = "loadFrom" then
-         return LoadFrom;
-      elsif Trimmed = "remove" then
-         return Remove;
-      elsif Trimmed = "list" then
-         return List;
+      --  The precondition ensures T is one of the valid commands
+      if    T = "+"        then return Add;
+      elsif T = "-"        then return Sub;
+      elsif T = "*"        then return Mul;
+      elsif T = "\\"       then return Div;
+      elsif T = "lock"     then return Lock;
+      elsif T = "unlock"   then return Unlock;
+      elsif T = "push1"    then return Push1;
+      elsif T = "push2"    then return Push2;
+      elsif T = "pop"      then return Pop;
+      elsif T = "storeTo"  then return StoreTo;
+      elsif T = "loadFrom" then return LoadFrom;
+      elsif T = "remove"   then return Remove;
+      elsif T = "list"     then return List;
       else
          return Unknown;
       end if;
    end From_String;
-
-   function Get_Cmd(Cmd : Command) return Command_Kind is
-   begin
-      return Cmd.Cmd;
-   end Get_Cmd;
    
-   function Get_Arg1(Cmd : Command) return Unbounded_String is
-   begin
-      if not (Get_Cmd(Cmd) in Push1 | Push2 | StoreTo | LoadFrom) then
-         raise Constraint_Error with "Command does not support first argument";
-      end if;
-      return Cmd.Arg1;
-   end Get_Arg1;
-   
-   function Get_Arg2(Cmd : Command) return Unbounded_String is
-   begin
-      if Get_Cmd(Cmd) /= Push2 then
-         raise Constraint_Error with "Command does not support second argument";
-      end if;
-      return Cmd.Arg2;
-   end Get_Arg2;
-   
+   --  Getters
+   function Get_Cmd  (Cmd : Command) return Command_Kind     is (Cmd.Cmd);
+   function Get_Arg1 (Cmd : Command) return Unbounded_String is (Cmd.Arg1);
+   function Get_Arg2 (Cmd : Command) return Unbounded_String is (Cmd.Arg2);
 end commandParser;

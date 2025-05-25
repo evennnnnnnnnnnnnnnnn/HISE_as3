@@ -1,42 +1,42 @@
+pragma SPARK_Mode (On);
 with MyStringTokeniser;       use MyStringTokeniser;
 with Ada.Strings.Unbounded;   use Ada.Strings.Unbounded;
-with Big_Integers; use Big_Integers;
-
-package commandParser with SPARK_Mode is
-
-   type Command_Kind is (Lock, Unlock, Push1, Push2, Pop, Add, Sub, Mul, Div, StoreTo, LoadFrom, Remove, List, Unknown);
-   
+with Ada.Strings;             -- for Ada.Strings.Both
+with Ada.Strings.Fixed;      use Ada.Strings.Fixed;
+package commandParser is
+   type Command_Kind is (Lock, Unlock, Push1, Push2, Pop,
+                         Add, Sub, Mul, Div,
+                         StoreTo, LoadFrom, Remove, List, Unknown);
    type Command is private;
    
-   function Parse_Command(Command_Line : String) return Command;
-   
-   function Safe_Slice(Command : String; Ext : TokenExtent) return String
+   --  Parse a command line string
+   --  Returns a command with Lock as default if parsing fails
+   function Parse_Command (Command_Line : String) return Command
      with
-       Pre =>
-         Ext.Start in Command'Range and then
-         Ext.Length >= 1 and then
-         (In_Range(Arg => To_Big_Integer(Ext.Start) + To_Big_Integer(Ext.Length - 1),
-                   Low => To_Big_Integer(Command'First),
-                   High => To_Big_Integer(Command'Last))),
-      Post =>
-        Safe_Slice'Result'Length = Ext.Length;
+       Pre  => Command_Line'Length > 0,
+       Post => Get_Cmd (Parse_Command'Result) in Command_Kind;
    
-   function From_String(S : String) return Command_Kind
-     with Pre => S'Length > 0;
+   function From_String (S : String) return Command_Kind
+     with
+       Pre => (Trim (S, Ada.Strings.Both) in
+                  "+" | "-" | "*" | "\\" |
+                  "lock" | "unlock" |
+                  "push1" | "push2" | "pop" |
+                  "storeTo" | "loadFrom" |
+                  "remove" | "list"),
+       Post => From_String'Result in Command_Kind;
    
-   function Get_Cmd(Cmd : Command) return Command_Kind with Global => null;
-   
-   function Get_Arg1(Cmd : Command) return Unbounded_String
+   function Get_Cmd  (Cmd : Command) return Command_Kind
+     with Global => null, Post => Get_Cmd'Result in Command_Kind;
+   function Get_Arg1 (Cmd : Command) return Unbounded_String
      with Global => null, Pre => (Get_Cmd(Cmd) in Lock | Unlock | Push1 | Push2 | StoreTo | LoadFrom | Remove);
-   
-   function Get_Arg2(Cmd : Command) return Unbounded_String
+
+   function Get_Arg2 (Cmd : Command) return Unbounded_String
      with Global => null, Pre => (Get_Cmd(Cmd) in Push2);
-      
 private
    type Command is record
-      Cmd : Command_Kind;
+      Cmd  : Command_Kind;
       Arg1 : Unbounded_String;
       Arg2 : Unbounded_String;
    end record;
-   
 end commandParser;
