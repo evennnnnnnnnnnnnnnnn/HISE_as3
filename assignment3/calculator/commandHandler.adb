@@ -54,7 +54,7 @@ package body commandHandler with SPARK_Mode is
             if Depth(S) < Max_Stack then
                Push(S, V);
             else
-               Put_Line("Error: stack overflow");
+               Put_Line("Unable to 'Push1', stack is full");
             end if;
          end;
 
@@ -67,7 +67,7 @@ package body commandHandler with SPARK_Mode is
             if Depth(S) <= Max_Stack - 2 then
                Push2(S, V1, V2);
             else
-               Put_Line("Error: stack overflow");
+               Put_Line("Unable to 'Push2', stack is full");
             end if;
          end;
 
@@ -76,7 +76,7 @@ package body commandHandler with SPARK_Mode is
          if Depth(S) > 0 then
             Pop(S);
          else
-            Put_Line("Error: stack underflow");
+            Put_Line("Unable to 'Pop', nothing on stack");
          end if;
       end if;
    end Handle_Stack;
@@ -92,17 +92,19 @@ package body commandHandler with SPARK_Mode is
             begin
                -- Check for potential overflow
                if (A > 0 and then B > 0 and then A <= Integer'Last - B) and
-                 (A < 0 and then B < 0 and then A >= Integer'First - B) and 
-                 Depth(S) < Max_Stack
+                 (A < 0 and then B < 0 and then A >= Integer'First - B)
                then
-                  Pop(S);
-                  Pop(S);
-                  Push(S, A + B);
-                  
+                  if Depth(S) < Max_Stack then
+                     Pop(S);
+                     Pop(S);
+                     Push(S, A + B);
+                  end if;
+               else
+                  Put_Line("Unable to perform 'Addition' due to potential overflow"); 
                end if;
             end;
          else
-            Put_Line("Error: insufficient operands");
+            Put_Line("Unable to compute, insufficient operands");
          end if;
 
       -- - (Subtraction)
@@ -112,18 +114,21 @@ package body commandHandler with SPARK_Mode is
                A : Integer := Second_Value(S);
                B : Integer := Top_Value(S);
             begin
-               -- Check for potential overflow
+               -- Check for potential underflow
                if (A > 0 and then B < 0 and then A <= Integer'Last + B) and
-                 (A < 0 and then B > 0 and then A >= Integer'First + B) and
-                 Depth(S) < Max_Stack
+                 (A < 0 and then B > 0 and then A >= Integer'First + B)
                then
-                  Pop(S);
-                  Pop(S);
-                  Push(S, A - B); 
+                  if Depth(S) < Max_Stack then
+                     Pop(S);
+                     Pop(S);
+                     Push(S, A - B);
+                  end if;
+               else
+                  Put_Line("Unable to perform 'Subtraction' due to potential underflow"); 
                end if;
             end;
          else
-            Put_Line("Error: insufficient operands");
+            Put_Line("Unable to compute, insufficient operands");
          end if;
 
       -- * (Multiplication)
@@ -134,21 +139,22 @@ package body commandHandler with SPARK_Mode is
                B : Integer := Top_Value(S);
             begin
 
-               if (A > 0 and then B > 0 and then A <= Integer'Last / B) and
-                 (A < 0 and then B < 0 and then B <= Integer'Last / A) and
-                 (A < 0 and then B > 0 and then A >= Integer'First / B) and
-                 (A > 0 and then B < 0 and then B >= Integer'First / A) and
-                 Depth(S) < Max_Stack
+               if (A > 0 and then B > 0 and then A > Integer'Last / B) or
+                 (A < 0 and then B < 0 and then A < Integer'Last / B) or
+                 (A < 0 and then B > 0 and then A < Integer'First / B) or
+                 (A > 0 and then B < 0 and then B < Integer'First / A)
                then
-                  Pop(S);
-                  Pop(S);
+                  Put_Line("Unable to perform 'Multiplication' due to potential overflow"); 
+               else
                   if Depth(S) < Max_Stack then
+                     Pop(S);
+                     Pop(S);
                      Push(S, A * B);
                   end if;
                end if;
             end;
          else
-            Put_Line("Error: insufficient operands");
+            Put_Line("Unable to compute, insufficient operands");
          end if;
 
       -- / (Division)
@@ -159,9 +165,9 @@ package body commandHandler with SPARK_Mode is
                B : Integer := Top_Value(S);
             begin
                if B = 0 then
-                  Put_Line("Error: division by zero");
+                  Put_Line("Unable to perform 'Division' due to division by 0");
                elsif A = Integer'First and then B = -1 then
-                  Put_Line("Error: division would cause overflow");
+                  Put_Line("Unable to perform 'Division' due to potential overflow");
                elsif Depth(S) < Max_Stack then
                   Pop(S);
                   Pop(S);
@@ -169,7 +175,7 @@ package body commandHandler with SPARK_Mode is
                end if;
             end;
          else
-            Put_Line("Error: insufficient operands");
+            Put_Line("Unable to compute, insufficient operands");
          end if;
       end if;
    end Handle_Arithmetic;
@@ -190,7 +196,7 @@ package body commandHandler with SPARK_Mode is
                end if;
             end;
          else
-            Put_Line("Error: insufficient operands");
+            Put_Line("Unable to store to memory, insufficient operands");
          end if;
 
       -- loadFrom <loc>

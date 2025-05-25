@@ -1,6 +1,6 @@
 pragma SPARK_Mode (On);
 
-package Stack is
+package Stack with SPARK_Mode is
    Max_Stack : constant := 512;
 
    type Stack_type is private;

@@ -3,7 +3,7 @@ with MyStringTokeniser;       use MyStringTokeniser;
 with Ada.Strings.Unbounded;   use Ada.Strings.Unbounded;
 with Ada.Strings;             -- for Ada.Strings.Both
 with Ada.Strings.Fixed;      use Ada.Strings.Fixed;
-package commandParser is
+package commandParser with SPARK_Mode is
    type Command_Kind is (Lock, Unlock, Push1, Push2, Pop,
                          Add, Sub, Mul, Div,
                          StoreTo, LoadFrom, Remove, List, Unknown);

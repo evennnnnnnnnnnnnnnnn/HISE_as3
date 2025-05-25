@@ -1,12 +1,6 @@
-with Big_Integers; use Big_Integers;
+
 
 package Integer_Operations with SPARK_Mode is
-
-   --  function Add(X : Integer; Y : Integer) return Integer with
-   --    Pre => (In_Range(Arg => To_Big_Integer(X) + To_Big_Integer(Y),
-   --                     Low => To_Big_Integer(Integer'First),
-   --                     High => To_Big_Integer(Integer'Last))),
-   --    Post => Add'Result = To_Integer(To_Big_Integer(X) + To_Big_Integer(Y));
 
    function Add(X: Integer; Y: Integer) return Integer with
      Pre  => (X > 0 and then Y > 0 and then X <= Integer'Last - Y) or

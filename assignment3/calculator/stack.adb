@@ -1,4 +1,4 @@
-pragma SPARK_Mode (On);
+with Ada.Text_IO;             use Ada.Text_IO;
 
 package body Stack with SPARK_Mode is
    procedure Initialize(S: out Stack_type) is
@@ -10,6 +10,7 @@ package body Stack with SPARK_Mode is
    procedure Push(S: in out Stack_type; V: Integer) is
    begin
       if Depth(S) >= Max_Stack then
+         Put_Line("Unable to perform 'Push' as not enough space left on space");
          return;
       end if;
       
@@ -20,6 +21,7 @@ package body Stack with SPARK_Mode is
    procedure Push2(S: in out Stack_type; V1, V2: Integer) is
    begin
       if S.Top > Max_Stack - 2 then
+         Put_Line("Unable to perform 'Push2' as not enough space left on space");
          return;
       end if;
       
@@ -33,7 +35,8 @@ package body Stack with SPARK_Mode is
    procedure Pop(S: in out Stack_type) is
    begin
       if S.Top = 0 then
-         raise Constraint_Error with "Stack underflow";
+         Put_Line("Unable to perform 'Pop' due to no elements on stack");
+         return;
       end if;
       
       S.Top := S.Top - 1;
