@@ -30,16 +30,38 @@ package body Calculator with SPARK_Mode is
       -- Parse the command with the Command Parser
       Cmd := Parse_Command(Command_Line);
 
-      -- Process the command in the Command Handler
+      -- Process the command in the Command Handler with safety checks
       case Get_Cmd(Cmd) is
-         when Unlock | Lock =>
-            Handle_Lock(Cmd, State, Master_Str, Master_Pin);
+         when Unlock =>
+            if not State then
+              Handle_Lock(Cmd, State, Master_Str, Master_Pin);
+            else
+               Put_Line("Can only 'unlock' when calculator is locked");
+            end if;
+         when Lock =>
+            if State then
+               Handle_Lock(Cmd, State, Master_Str, Master_Pin);
+            else
+               Put_Line("Can only 'lock' when calculator is unlocked");
+            end if;
          when Push1 | Push2 | Pop =>
-            Handle_Stack(Cmd, S);
+            if State then
+               Handle_Stack(Cmd, State, S);
+            else
+               Put_Line("Cannot perform this operation without unlocking");
+            end if;
          when Add | Sub | Mul | Div =>
-            Handle_Arithmetic(Cmd, S);
+            if State then
+               Handle_Arithmetic(Cmd, State, S);
+            else
+               Put_Line("Cannot perform this operation without unlocking");
+            end if;
          when StoreTo | LoadFrom | Remove | List =>
-            Handle_Memory(Cmd, S, Mem);
+            if State then
+               Handle_Memory(Cmd, State, S, Mem);
+            else
+               Put_Line("Cannot perform this operation without unlocking");
+            end if;
          when Unknown =>
             Put_Line("Error: Invalid Command, Please Try Again");
       end case;

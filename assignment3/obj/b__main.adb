@@ -33,10 +33,10 @@ package body ada_main is
    E142 : Short_Integer; pragma Import (Ada, E142, "ada__strings__unbounded_E");
    E094 : Short_Integer; pragma Import (Ada, E094, "ada__text_io_E");
    E161 : Short_Integer; pragma Import (Ada, E161, "memorystore_E");
-   E176 : Short_Integer; pragma Import (Ada, E176, "mycommandline_E");
-   E180 : Short_Integer; pragma Import (Ada, E180, "mystring_E");
+   E180 : Short_Integer; pragma Import (Ada, E180, "mycommandline_E");
+   E184 : Short_Integer; pragma Import (Ada, E184, "mystring_E");
    E163 : Short_Integer; pragma Import (Ada, E163, "mystringtokeniser_E");
-   E172 : Short_Integer; pragma Import (Ada, E172, "commandparser_E");
+   E176 : Short_Integer; pragma Import (Ada, E176, "commandparser_E");
    E165 : Short_Integer; pragma Import (Ada, E165, "pin_E");
    E168 : Short_Integer; pragma Import (Ada, E168, "stack_E");
    E170 : Short_Integer; pragma Import (Ada, E170, "stringtointeger_E");
@@ -229,10 +229,10 @@ package body ada_main is
       Ada.Text_Io'Elab_Body;
       E094 := E094 + 1;
       E161 := E161 + 1;
-      E176 := E176 + 1;
       E180 := E180 + 1;
+      E184 := E184 + 1;
       E163 := E163 + 1;
-      E172 := E172 + 1;
+      E176 := E176 + 1;
       E165 := E165 + 1;
       E168 := E168 + 1;
       E170 := E170 + 1;

@@ -5,7 +5,7 @@ with Ada.Text_IO;             use Ada.Text_IO;
 with MyStringTokeniser;       use MyStringTokeniser;
 with PIN;
 with Ada.Strings.Unbounded;   use Ada.Strings.Unbounded;
-with MemoryStore;
+with MemoryStore;             use MemoryStore;
 with Interfaces;
 
 package body commandHandler with SPARK_Mode is
@@ -27,15 +27,16 @@ package body commandHandler with SPARK_Mode is
       -- LOCK <newpin>
       elsif Get_Cmd(Cmd) = Lock then
          declare
-            New_Pin : String := To_String(Get_Arg1(Cmd));
+            New_Pin : constant String := To_String(Get_Arg1(Cmd));
          begin   
             if State and then Master_Str'Length = New_Pin'Length and then 
               (for all C of New_Pin => C in '0' .. '9') 
             then
-               Master_Str := To_String(Get_Arg1(Cmd));
+               Master_Str := New_Pin;
                Master_Pin := PIN.From_String(Master_Str);
                State      := False;
                Put_Line("Calculator locked. New PIN set.");
+               
             else
                Put_Line("Error: already locked");
             end if;
@@ -44,13 +45,19 @@ package body commandHandler with SPARK_Mode is
       end if;
    end Handle_Lock;
       
-   procedure Handle_Stack(Cmd : in Command; S : in out Stack_type) is
+   procedure Handle_Stack(Cmd : in Command; State: in Boolean; S : in out Stack_type) is
    begin
       -- PUSH1 <num>
       if Get_Cmd(Cmd) = Push1 then
          declare
             V : constant Integer := From_String(To_String(Get_Arg1(Cmd)));
          begin
+            -- Check invalid number provided, does not save
+            if V = 0 and then To_String(Get_Arg1(Cmd))'Length /= 1 then
+               Put_Line("Unable to 'Push1', invalid number provided");
+               return;               
+            end if;
+            
             if Depth(S) < Max_Stack then
                Push(S, V);
             else
@@ -64,6 +71,12 @@ package body commandHandler with SPARK_Mode is
             V1 : constant Integer := From_String(To_String(Get_Arg1(Cmd)));
             V2 : constant Integer := From_String(To_String(Get_Arg2(Cmd)));
          begin
+            -- Check invalid number provided, does not save
+            if (V1 = 0 and then To_String(Get_Arg1(Cmd))'Length /= 1) or
+               (V2 = 0 and then To_String(Get_Arg2(Cmd))'Length /= 1) then
+               Put_Line("Unable to 'Push2', invalid number provided");
+               return;               
+            end if;
             if Depth(S) <= Max_Stack - 2 then
                Push2(S, V1, V2);
             else
@@ -81,7 +94,7 @@ package body commandHandler with SPARK_Mode is
       end if;
    end Handle_Stack;
    
-   procedure Handle_Arithmetic(Cmd : in Command; S : in out Stack_type) is
+   procedure Handle_Arithmetic(Cmd : in Command; State: in Boolean; S : in out Stack_type) is
    begin
       -- + (Add)
       if Get_Cmd(Cmd) = Add then
@@ -91,16 +104,14 @@ package body commandHandler with SPARK_Mode is
                B : Integer := Top_Value(S);
             begin
                -- Check for potential overflow
-               if (A > 0 and then B > 0 and then A <= Integer'Last - B) and
-                 (A < 0 and then B < 0 and then A >= Integer'First - B)
+               if (B > 0 and then A > Integer'Last - B) or
+                 (B < 0 and then A < Integer'First - B)
                then
-                  if Depth(S) < Max_Stack then
-                     Pop(S);
-                     Pop(S);
-                     Push(S, A + B);
-                  end if;
-               else
                   Put_Line("Unable to perform 'Addition' due to potential overflow"); 
+               elsif Depth(S) < Max_Stack then
+                  Pop(S);
+                  Pop(S);
+                  Push(S, A + B);
                end if;
             end;
          else
@@ -115,16 +126,14 @@ package body commandHandler with SPARK_Mode is
                B : Integer := Top_Value(S);
             begin
                -- Check for potential underflow
-               if (A > 0 and then B < 0 and then A <= Integer'Last + B) and
-                 (A < 0 and then B > 0 and then A >= Integer'First + B)
+               if (B < 0 and then A > Integer'Last + B) or
+                 (B > 0 and then A < Integer'First + B)
                then
-                  if Depth(S) < Max_Stack then
-                     Pop(S);
-                     Pop(S);
-                     Push(S, A - B);
-                  end if;
-               else
                   Put_Line("Unable to perform 'Subtraction' due to potential underflow"); 
+               elsif Depth(S) < Max_Stack then
+                  Pop(S);
+                  Pop(S);
+                  Push(S, A - B);
                end if;
             end;
          else
@@ -145,12 +154,10 @@ package body commandHandler with SPARK_Mode is
                  (A > 0 and then B < 0 and then B < Integer'First / A)
                then
                   Put_Line("Unable to perform 'Multiplication' due to potential overflow"); 
-               else
-                  if Depth(S) < Max_Stack then
-                     Pop(S);
-                     Pop(S);
-                     Push(S, A * B);
-                  end if;
+               elsif Depth(S) < Max_Stack then
+                  Pop(S);
+                  Pop(S);
+                  Push(S, A * B);
                end if;
             end;
          else
@@ -180,7 +187,7 @@ package body commandHandler with SPARK_Mode is
       end if;
    end Handle_Arithmetic;
       
-   procedure Handle_Memory(Cmd : in Command; S : in out Stack_type; Mem : in out MemoryStore.Database) is
+   procedure Handle_Memory(Cmd : in Command; State: in Boolean; S : in out Stack_type; Mem : in out MemoryStore.Database) is
    begin
       -- storeTo <loc>
       if Get_Cmd(Cmd) = StoreTo then
@@ -209,7 +216,10 @@ package body commandHandler with SPARK_Mode is
               Depth(S) < Max_Stack
             then
                Push(S, Integer(MemoryStore.Get(Mem,
-                   MemoryStore.Location_Index(Loc_Int))));
+                    MemoryStore.Location_Index(Loc_Int))));
+            else
+               Put_Line("Invalid save location, between 1 and" & Integer'Image(Max_Locations) 
+                       & ", or no number saved at that location. Try 'list' command to see.");
             end if;
          end;
 
@@ -218,9 +228,12 @@ package body commandHandler with SPARK_Mode is
          declare
             Loc_Int : Integer := From_String(To_String(Get_Arg1(Cmd)));
          begin
+            -- Check arg 1 validity, has to be between 
             if Loc_Int in MemoryStore.Location_Index'Range then
                MemoryStore.Remove(Mem,
-                 MemoryStore.Location_Index(Loc_Int));
+                                  MemoryStore.Location_Index(Loc_Int));
+            else
+               Put_Line("Please provide valid save location, between 1 and" & Integer'Image(Max_Locations));
             end if;
          end;
 
