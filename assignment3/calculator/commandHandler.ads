@@ -47,9 +47,7 @@ package commandHandler with SPARK_Mode is
      Post => (Depth(S) = Depth(S'Old) - 1 or Depth(S) = Depth(S'Old));
 
    procedure Handle_Memory(Cmd : in Command; S : in out Stack_type; Mem : in out MemoryStore.Database) with
-     Pre => Get_Cmd(Cmd) in StoreTo | LoadFrom | Remove | List,
-
-     Post => (Depth(S) = Depth(S'Old) - 1 or Depth(S) = Depth(S'Old));
+     Pre => Get_Cmd(Cmd) in StoreTo | LoadFrom | Remove | List;
 
 
 end commandHandler;

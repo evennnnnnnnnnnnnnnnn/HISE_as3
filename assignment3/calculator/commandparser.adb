@@ -20,7 +20,7 @@ package body commandParser with SPARK_Mode is
       Arg1       : Unbounded_String := Null_Unbounded_String;
       Arg2       : Unbounded_String := Null_Unbounded_String;
       R          : Command;
-      Default_Cmd : constant Command_Kind := Lock; -- Default value
+      Default_Cmd : constant Command_Kind := Unknown; -- Default value
    begin
       Tokenise (Command_Line, Tokens, Num_Tokens);
       pragma Assert (Num_Tokens <= 10);

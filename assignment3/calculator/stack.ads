@@ -6,7 +6,7 @@ package Stack is
    type Stack_type is private;
 
    -- Expression function so SPARK can see the implementation
-   function Depth(S: Stack_type) return Natural;
+   function Depth(S: Stack_type) return Natural with Global => null;
 
    procedure Initialize(S: out Stack_type)
      with Post => Depth(S) = 0;
@@ -31,10 +31,10 @@ package Stack is
 
    function Second_Value(S: Stack_type) return Integer
      with Pre => Depth(S) > 1;
-
-   function Depth(S: Stack_type) return Natural with Global => null;
    
 private
+   type Stack_Array is array(1 .. Max_Stack) of Integer;
+     
    type Stack_type is record
       Data: Stack_Array := (others => 0);
       Top: Natural := 0;

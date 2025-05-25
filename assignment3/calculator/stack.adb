@@ -39,18 +39,4 @@ package body Stack with SPARK_Mode is
       S.Top := S.Top - 1;
    end Pop;
    
-   
-   function Second_Value(S: Stack_type) return Integer is
-   begin
-      if Depth(S) <= 1 then
-         raise Constraint_Error with "Stack has less than 2 elements";
-      end if;
-      return S.Data(S.Top - 1);
-   end Second_Value;
-   
-   function Depth(S: Stack_type) return Natural is
-   begin
-      return S.Top;
-   end Depth;
-   
 end Stack;

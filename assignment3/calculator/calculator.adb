@@ -58,9 +58,9 @@ package body Calculator with SPARK_Mode is
       S        : Stack.Stack_type;
       Mem      : MemoryStore.Database;
    begin
-      pragma Annotate (GNATprove, False_Positive,
-                       "might not be initialized",
-                       "These variables are initialized below");
+      --  pragma Annotate (GNATprove, False_Positive,
+      --                   "might not be initialized",
+      --                   "These variables are initialized below");
 
       MemoryStore.Init(Mem);
       Initialize(S);
