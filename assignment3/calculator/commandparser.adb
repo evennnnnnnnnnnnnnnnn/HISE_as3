@@ -76,7 +76,7 @@ package body commandParser with SPARK_Mode is
          if    Trimmed = "+"        then R.Cmd := Add;
          elsif Trimmed = "-"        then R.Cmd := Sub;
          elsif Trimmed = "*"        then R.Cmd := Mul;
-         elsif Trimmed = "\\"       then R.Cmd := Div;
+         elsif Trimmed = "/"       then R.Cmd := Div;
          elsif Trimmed = "lock"     then R.Cmd := Lock;
          elsif Trimmed = "unlock"   then R.Cmd := Unlock;
          elsif Trimmed = "push1"    then R.Cmd := Push1;
@@ -105,7 +105,7 @@ package body commandParser with SPARK_Mode is
       if    T = "+"        then return Add;
       elsif T = "-"        then return Sub;
       elsif T = "*"        then return Mul;
-      elsif T = "\\"       then return Div;
+      elsif T = "/"       then return Div;
       elsif T = "lock"     then return Lock;
       elsif T = "unlock"   then return Unlock;
       elsif T = "push1"    then return Push1;

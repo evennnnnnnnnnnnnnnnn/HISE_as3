@@ -1,25 +1,25 @@
 package body integer_operations with SPARK_Mode is
 
    
-   function Add(X : Integer; Y : Integer) return Integer is
+   function Add(A : Integer; B : Integer) return Integer is
    begin
-      return (X + Y);
+      return (A + B);
    end Add;
    
 
-   function Subtract(X : Integer; Y : Integer) return Integer is
+   function Subtract(A : Integer; B : Integer) return Integer is
    begin
-      return (X - Y);
+      return (A - B);
    end Subtract;
    
-   function Multiply(X : Integer; Y : Integer) return Integer is
+   function Multiply(A : Integer; B : Integer) return Integer is
    begin
-      return (X * Y);
+      return (A * B);
    end Multiply;
    
-   function Divide(X : Integer; Y : Integer) return Integer is
+   function Divide(A : Integer; B : Integer) return Integer is
    begin
-      return (X / Y);
+      return (A / B);
    end Divide;
 
 end integer_operations;

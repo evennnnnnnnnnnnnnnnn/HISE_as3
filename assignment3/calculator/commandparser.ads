@@ -23,7 +23,7 @@ package commandParser with SPARK_Mode is
    function From_String (S : String) return Command_Kind
      with
        Pre => (Trim (S, Ada.Strings.Both) in
-                  "+" | "-" | "*" | "\\" |
+                  "+" | "-" | "*" | "/" |
                   "lock" | "unlock" |
                   "push1" | "push2" | "pop" |
                   "storeTo" | "loadFrom" |

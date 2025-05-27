@@ -1,5 +1,5 @@
 with Ada.Text_IO;             use Ada.Text_IO;
-with MyCommandLine;
+with MyCommandLine;           use MyCommandLine;
 with MyStringTokeniser;       use MyStringTokeniser;
 with StringToInteger;         use StringToInteger;
 with PIN;
@@ -72,7 +72,7 @@ package body Calculator with SPARK_Mode is
    --  Run
    --------------------------------------------------------------------------
    procedure Run is
-      Pin_Str  : String(1 .. 4) := "1234";
+      Pin_Str  : String(1..4) := (others => ' ');
       Pin_Val  : PIN.PIN;
       State    : Boolean       := False;
       Line_Buf : String(1 .. 2048);
@@ -80,10 +80,20 @@ package body Calculator with SPARK_Mode is
       S        : Stack.Stack_type;
       Mem      : MemoryStore.Database;
    begin
-      --  pragma Annotate (GNATprove, False_Positive,
-      --                   "might not be initialized",
-      --                   "These variables are initialized below");
+      -- Process argument to set initial password
+      if Argument_Count >= 1 then
+         for I in MyCommandLine.Argument(1)'Range loop
+            exit when I - MyCommandLine.Argument(1)'First + 1 > 4;
+            Pin_Str(I - MyCommandLine.Argument(1)'First + 1) := MyCommandLine.Argument(1)(I);
+         end loop;
+         Put_Line("PIN is set to provided arg, up to 4 char");
+      else
+         Put_Line("No default password provided, password set to 1234");
+         Pin_Str := "1234";
+      end if;
 
+
+      -- Initialize stack and memory
       MemoryStore.Init(Mem);
       Initialize(S);
 

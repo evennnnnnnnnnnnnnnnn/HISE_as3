@@ -1,4 +1,4 @@
-with Stack; use Stack;
+with Stack;                   use Stack;
 with MemoryStore;
 with StringToInteger;         use StringToInteger;
 with Ada.Text_IO;             use Ada.Text_IO;
@@ -7,6 +7,7 @@ with PIN;
 with Ada.Strings.Unbounded;   use Ada.Strings.Unbounded;
 with MemoryStore;             use MemoryStore;
 with Interfaces;
+with integer_operations;      use integer_operations;
 
 package body commandHandler with SPARK_Mode is
 
@@ -38,7 +39,7 @@ package body commandHandler with SPARK_Mode is
                Put_Line("Calculator locked. New PIN set.");
                
             else
-               Put_Line("Error: already locked");
+               Put_Line("Invalid PIN provided, must be 4 digit between 0000...9999");
             end if;
          end;
          
@@ -111,7 +112,7 @@ package body commandHandler with SPARK_Mode is
                elsif Depth(S) < Max_Stack then
                   Pop(S);
                   Pop(S);
-                  Push(S, A + B);
+                  Push(S, Add(A, B));
                end if;
             end;
          else
@@ -133,7 +134,7 @@ package body commandHandler with SPARK_Mode is
                elsif Depth(S) < Max_Stack then
                   Pop(S);
                   Pop(S);
-                  Push(S, A - B);
+                  Push(S, Subtract(A, B));
                end if;
             end;
          else
@@ -157,7 +158,7 @@ package body commandHandler with SPARK_Mode is
                elsif Depth(S) < Max_Stack then
                   Pop(S);
                   Pop(S);
-                  Push(S, A * B);
+                  Push(S, Multiply(A, B));
                end if;
             end;
          else
@@ -178,7 +179,7 @@ package body commandHandler with SPARK_Mode is
                elsif Depth(S) < Max_Stack then
                   Pop(S);
                   Pop(S);
-                  Push(S, A / B);
+                  Push(S, Divide(A, B));
                end if;
             end;
          else
